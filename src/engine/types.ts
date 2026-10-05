@@ -1,8 +1,9 @@
 export type TxType = 'send_money' | 'cash_out' | 'cash_in' | 'payment' | 'mobile_recharge' | 'bill_pay'
 export type Channel = 'app' | 'ussd' | 'agent'
 export type AccountKind = 'customer' | 'merchant' | 'agent'
-export type Segment = 'student' | 'salaried' | 'rural' | 'business'
+export type Segment = 'student' | 'salaried' | 'rural' | 'business' | 'unknown'
 export type Pattern = 'normal' | 'ato' | 'mule' | 'scam' | 'agent'
+export type Typology = Pattern | 'other'
 
 export interface Account {
   id: string
@@ -76,7 +77,7 @@ export interface Scored {
   rules: RuleHit[]
   reasons: Reason[]
   band: 'low' | 'medium' | 'high'
-  typology: Pattern
+  typology: Typology
 }
 
 export type CaseStatus = 'open' | 'escalated' | 'confirmed' | 'dismissed'

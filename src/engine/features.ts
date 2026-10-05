@@ -61,7 +61,7 @@ export class FeatureBuilder {
     return s
   }
 
-  compute(tx: Tx): FeatureVector {
+  compute(tx: Tx): { f: FeatureVector; ctx: FeatureContext } {
     const s = this.state(tx.sender, tx.ts)
     const rcv = this.state(tx.receiver, tx.ts)
     const L = Math.log1p(tx.amount)
@@ -91,7 +91,16 @@ export class FeatureBuilder {
     const passThrough = recv12 > 0 ? Math.min(1, recv12 / tx.amount) * Math.min(1, distinct12 / 3) : 0
 
     const locCount = s.locations.get(tx.location) ?? 0
-    return {
+    const ctx: FeatureContext = {
+      typicalAmount: Math.round(Math.expm1(mean)),
+      history: s.n,
+      hour: h,
+      fanIn: fanIn.size,
+      recv12: Math.round(recv12),
+      senders12: distinct12,
+      ageDays: Math.round(ageDays),
+    }
+    const f: FeatureVector = {
       amtLog: L,
       amtZ,
       nightHour: h < 5 ? 1 : 0,
@@ -107,6 +116,7 @@ export class FeatureBuilder {
       isCashOut: tx.type === 'cash_out' ? 1 : 0,
       isSend: tx.type === 'send_money' ? 1 : 0,
     }
+    return { f, ctx }
   }
 
   commit(tx: Tx) {
@@ -125,5 +135,13 @@ export class FeatureBuilder {
   }
 }
 
-/** Raw fan-in count (distinct senders in 24h) recovered from the log feature. */
-export const fanInCount = (f: FeatureVector) => Math.round(Math.expm1(f.recvFanIn24h))
+/** Human-readable facts behind the features, used in explanations. */
+export interface FeatureContext {
+  typicalAmount: number
+  history: number
+  hour: number
+  fanIn: number
+  recv12: number
+  senders12: number
+  ageDays: number
+}
