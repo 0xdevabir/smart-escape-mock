@@ -1,5 +1,6 @@
 import type { Building, Hazards, RankedRoute, RouteResult } from '../lib/types'
 import { formatNum, type Lang } from '../lib/i18n'
+import { Select } from './Select'
 
 export type Change = { kind: 'delta'; from: number; to: number } | { kind: 'lost'; from: number } | null
 
@@ -54,18 +55,21 @@ export function RoutePanel(p: Props) {
       <label className="field">
         <span>{t('panel.start')}</span>
         <div className="row">
-          <select value={start ?? ''} onChange={(e) => onStart(e.target.value || null)}>
-            <option value="">{t('panel.startPlaceholder')}</option>
-            {starts.map((n) => {
+          <Select
+            value={start ?? ''}
+            placeholder={t('panel.startPlaceholder')}
+            ariaLabel={t('panel.start')}
+            onChange={(v) => onStart(v || null)}
+            options={starts.map((n) => {
               const blocked = hazards.blocked_nodes.includes(n.id)
-              return (
-                <option key={n.id} value={n.id} disabled={blocked && n.id !== start}>
-                  {n.id} · {n.label}
-                  {blocked ? ` (${t('state.blocked')})` : ''}
-                </option>
-              )
+              return {
+                value: n.id,
+                label: `${n.id} · ${n.label}`,
+                disabled: blocked && n.id !== start,
+                hint: blocked ? t('state.blocked') : undefined,
+              }
             })}
-          </select>
+          />
           {start && <button className="btn small" onClick={() => onStart(null)}>{t('btn.clearStart')}</button>}
         </div>
       </label>
@@ -223,3 +227,4 @@ export function RoutePanel(p: Props) {
     </section>
   )
 }
+

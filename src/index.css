@@ -441,14 +441,44 @@ button { touch-action: manipulation; }
 /* ---------- Route panel */
 .field { display: block; margin-bottom: 14px; }
 .field > span { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .04em; }
-.field select {
-  flex: 1; min-width: 0; padding: 10px 38px 10px 14px; min-height: 42px; border-radius: 12px; border: 1px solid var(--line);
-  background-color: var(--soft); appearance: none; -webkit-appearance: none; cursor: pointer; font-weight: 500;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%238e8b80' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 14px center;
-  transition: border-color .25s var(--ease), box-shadow .25s var(--ease);
+/* Custom select — glass listbox, no native OS menu */
+.select { position: relative; flex: 1; min-width: 0; }
+.select-trigger {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 10px 12px 10px 14px; min-height: 42px; border-radius: 12px; border: 1px solid var(--line);
+  background: var(--soft); cursor: pointer; font-weight: 500; text-align: left;
+  transition: border-color .25s var(--ease), box-shadow .25s var(--ease), background .25s var(--ease);
 }
-.field select:focus-visible { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 20%, transparent); }
+.select-trigger .icon { color: var(--muted); flex: none; transition: transform .35s var(--ease); }
+.select.is-open .select-trigger {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 20%, transparent);
+  background: var(--card);
+}
+.select.is-open .select-trigger .icon { transform: rotate(180deg); color: var(--primary); }
+.select-trigger:focus-visible { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 20%, transparent); }
+.select-value { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.select-placeholder { color: var(--muted); font-weight: 500; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.select-menu {
+  position: absolute; z-index: 40; left: 0; right: 0; top: calc(100% + 6px);
+  margin: 0; padding: 6px; list-style: none; max-height: min(280px, 45vh); overflow: auto;
+  border-radius: 16px; border: 1px solid var(--glass-line);
+  background: var(--glass); backdrop-filter: blur(22px) saturate(1.8); -webkit-backdrop-filter: blur(22px) saturate(1.8);
+  box-shadow: var(--shadow-lg);
+  animation: select-in .28s var(--spring) both;
+}
+.select-menu li {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+  padding: 10px 12px; border-radius: 12px; cursor: pointer; font-weight: 500; font-size: 14px;
+  transition: background .18s var(--ease), color .18s var(--ease);
+}
+.select-menu li[data-active='true'] { background: var(--fill); }
+.select-menu li.is-selected { background: var(--primary-soft); color: var(--primary-ink); }
+.select-menu li.is-selected[data-active='true'] { background: color-mix(in srgb, var(--primary) 28%, var(--primary-soft)); }
+.select-menu li.is-disabled { opacity: .42; cursor: not-allowed; }
+.select-opt-main { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.select-opt-hint { flex: none; font-size: 11.5px; font-weight: 650; color: var(--danger); text-transform: uppercase; letter-spacing: .03em; }
+@keyframes select-in { from { opacity: 0; transform: translateY(-6px) scale(.98); } to { opacity: 1; transform: none; } }
 
 .status { border-radius: 18px; padding: 16px; border: 1px solid; animation: pop-in .5s var(--spring) both; }
 .status p { margin: 4px 0 0; font-size: 14px; }
@@ -679,7 +709,7 @@ kbd { font-family: var(--mono); font-size: 12px; padding: 3px 7px; border-radius
   .btn.small { min-height: 38px; }
   .segmented button { padding: 10px 16px; }
   .toggle { padding: 12px 14px; }
-  .field select { min-height: 46px; }
+  .select-trigger { min-height: 46px; }
 }
 
 /* ---------- Responsive */

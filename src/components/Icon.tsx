@@ -14,6 +14,7 @@ const PATHS = {
   pin: 'M12 21s-6-5.4-6-11a6 6 0 0 1 12 0c0 5.6-6 11-6 11zm0-8.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z',
   hazard: 'M12 4 2.5 20h19zM12 10v4.5M12 17.5h.01',
   close: 'M6 6l12 12M18 6 6 18',
+  chevron: 'M6 9l6 6 6-6',
 } as const
 
 export type IconName = keyof typeof PATHS
@@ -25,3 +26,4 @@ export function Icon({ name, size = 18 }: { name: IconName; size?: number }) {
     </svg>
   )
 }
+
