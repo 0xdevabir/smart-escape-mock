@@ -16,7 +16,6 @@ import { FIT, zoomBy, type View } from './lib/view'
 import { parseBuildingText, validateBuilding, type ValidationError } from './lib/validate'
 
 const STORE_KEY = 'waynest:v1'
-const SPLASH_KEY = 'waynest:splash'
 const SAMPLE_URL = `${import.meta.env.BASE_URL}building.json`
 const MAX_ERRORS = 12
 const MAX_HISTORY = 100
@@ -94,10 +93,7 @@ export default function App() {
   const [preview, setPreview] = useState<string[]>([])
   const [view, setView] = useState<View>(FIT)
   const [help, setHelp] = useState(false)
-  // The intro plays once per tab session so reloads during testing go straight to the map.
-  const [splash, setSplash] = useState(() => {
-    try { return !sessionStorage.getItem(SPLASH_KEY) } catch { return true }
-  })
+  const [splash, setSplash] = useState(true)
   const [demo, setDemo] = useState<number | null>(null)
   const [seen, setSeen] = useState<Set<string>>(() => new Set())
   const fileRef = useRef<HTMLInputElement>(null)
@@ -385,10 +381,7 @@ export default function App() {
       onDrop={onDrop}
     >
       {splash && (
-        <SplashIntro title={t('app.title')} subtitle={t('app.subtitle')} onDone={() => {
-          setSplash(false)
-          try { sessionStorage.setItem(SPLASH_KEY, '1') } catch { /* storage off: the intro just replays */ }
-        }} />
+        <SplashIntro title={t('app.title')} subtitle={t('app.subtitle')} onDone={() => setSplash(false)} />
       )}
       <header className="topbar">
         <div className="brand">
