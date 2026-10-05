@@ -9,6 +9,7 @@ type Props = {
 /** Full-viewport brand intro: shards assemble → path races → zoom blast out. */
 export function SplashIntro({ title, subtitle, onDone }: Props) {
   const [exiting, setExiting] = useState(false)
+  const [assembled, setAssembled] = useState(false)
   const done = useRef(false)
   // The parent passes a fresh callback each render; keep the latest in a ref so re-renders never restart the timers.
   const onDoneRef = useRef(onDone)
@@ -28,12 +29,15 @@ export function SplashIntro({ title, subtitle, onDone }: Props) {
       return () => window.clearTimeout(t)
     }
 
+    // Last shard lands ~0.78s + 780ms delay; lock the mark so nothing restarts or snaps back.
+    const assembledAt = window.setTimeout(() => setAssembled(true), 1650)
     const exitAt = window.setTimeout(() => setExiting(true), 2200)
     const doneAt = window.setTimeout(finish, 2800)
     // Controls are never delayed: the stage ignores pointer events, and any click or key ends the intro at once.
     window.addEventListener('pointerdown', finish, true)
     window.addEventListener('keydown', finish, true)
     return () => {
+      window.clearTimeout(assembledAt)
       window.clearTimeout(exitAt)
       window.clearTimeout(doneAt)
       window.removeEventListener('pointerdown', finish, true)
@@ -57,7 +61,7 @@ export function SplashIntro({ title, subtitle, onDone }: Props) {
       </div>
 
       <div className="splash-core">
-        <div className="splash-mark">
+        <div className={`splash-mark${assembled ? ' is-assembled' : ''}`}>
           <div className="splash-aura" />
 
           <svg className="splash-svg" viewBox="0 0 64 64" aria-hidden="true">
@@ -155,3 +159,4 @@ export function SplashIntro({ title, subtitle, onDone }: Props) {
     </div>
   )
 }
+
