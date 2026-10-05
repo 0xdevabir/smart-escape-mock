@@ -12,9 +12,9 @@ import { useApp } from '../state'
  * compositor. Skipped when prefers-reduced-motion is on.
  */
 
-const ASSEMBLE_MS = 1200
-const ZOOM_MS = 780
-const FADE_MS = 480
+const ASSEMBLE_MS = 2400
+const ZOOM_MS = 1100
+const FADE_MS = 700
 const EXIT_MS = ZOOM_MS + FADE_MS
 
 const STAGE_STYLE = {
@@ -36,11 +36,11 @@ const GLOW: CSSProperties = {
 
 // Piece flight: translate + spin about each element's own centre in the 64 viewBox.
 const PIECES: { id: string; style: CSSProperties }[] = [
-  { id: 'ring-outer', style: { '--fx': '-42%', '--fy': '-18%', '--fr': '-120deg', '--origin': '50% 46.9%', '--d': '80ms' } as CSSProperties },
-  { id: 'ring-inner', style: { '--fx': '38%', '--fy': '22%', '--fr': '140deg', '--origin': '50% 46.9%', '--d': '160ms' } as CSSProperties },
-  { id: 'scan', style: { '--fx': '-20%', '--fy': '40%', '--fr': '200deg', '--origin': '50% 46.9%', '--d': '240ms' } as CSSProperties },
-  { id: 'core', style: { '--fx': '0%', '--fy': '-28%', '--fr': '0deg', '--origin': '50% 46.9%', '--d': '360ms' } as CSSProperties },
-  { id: 'anchor', style: { '--fx': '0%', '--fy': '48%', '--fr': '0deg', '--origin': '50% 72%', '--d': '440ms' } as CSSProperties },
+  { id: 'ring-outer', style: { '--fx': '-42%', '--fy': '-18%', '--fr': '-120deg', '--origin': '50% 46.9%', '--d': '160ms' } as CSSProperties },
+  { id: 'ring-inner', style: { '--fx': '38%', '--fy': '22%', '--fr': '140deg', '--origin': '50% 46.9%', '--d': '340ms' } as CSSProperties },
+  { id: 'scan', style: { '--fx': '-20%', '--fy': '40%', '--fr': '200deg', '--origin': '50% 46.9%', '--d': '520ms' } as CSSProperties },
+  { id: 'core', style: { '--fx': '0%', '--fy': '-28%', '--fr': '0deg', '--origin': '50% 46.9%', '--d': '760ms' } as CSSProperties },
+  { id: 'anchor', style: { '--fx': '0%', '--fy': '48%', '--fr': '0deg', '--origin': '50% 72%', '--d': '960ms' } as CSSProperties },
 ]
 
 let played = false
