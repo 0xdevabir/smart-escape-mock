@@ -1,5 +1,6 @@
 import { BookOpen, ChevronRight, Database, Ellipsis, FlaskConical, LayoutDashboard, Moon, Network, Scale, Settings, ShieldAlert, Sun } from 'lucide-react'
 import { useEffect, useId, useState } from 'react'
+import { BootIntro } from './components/BootIntro'
 import { Toast } from './components/ui'
 import type { Key } from './i18n'
 import About from './pages/About'
@@ -223,6 +224,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen">
+      <BootIntro />
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-full focus:bg-surface focus:px-4 focus:py-2">
         {i18n.t('skipToContent')}
       </a>
