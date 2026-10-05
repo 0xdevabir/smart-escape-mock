@@ -197,6 +197,8 @@ export const MapView = forwardRef<SVGSVGElement, Props>(function MapView(
 
   return (
     <div className="map-wrap" ref={wrapRef}>
+      {/* Scroller: on phones the plan keeps a legible minimum width and pans sideways instead of shrinking */}
+      <div className="map-scroll" onScroll={() => setTip(null)}>
       <svg
         ref={ref}
         className={`map mode-${mode}${view.k > 1 ? ' is-zoomed' : ''}`}
@@ -353,6 +355,7 @@ export const MapView = forwardRef<SVGSVGElement, Props>(function MapView(
           </g>
         )}
       </svg>
+      </div>
 
       {children}
 

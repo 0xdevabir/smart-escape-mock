@@ -201,6 +201,7 @@ button { touch-action: manipulation; }
 .brand-mark rect { fill: var(--exit); }
 .brand-mark path { fill: none; stroke: var(--exit-ink); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
 .toolbar { display: flex; gap: 6px; align-items: center; flex-wrap: nowrap; }
+.btn-group { display: flex; flex: none; gap: 2px; }
 .divider { width: 1px; height: 22px; background: var(--line); margin: 0 4px; flex: none; }
 
 /* ---------- Buttons: iOS capsules */
@@ -399,7 +400,10 @@ button { touch-action: manipulation; }
 
 /* ---------- Map overlays: HUD / coach mark and zoom share a bar above the drawing, so they never cover a node */
 .map-wrap { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto minmax(0, 1fr); align-items: center; }
-.map-wrap > .map { grid-column: 1 / -1; grid-row: 2; }
+.map-scroll {
+  grid-column: 1 / -1; grid-row: 2; min-width: 0; overflow-x: auto; overflow-y: hidden;
+  overscroll-behavior-x: contain; scrollbar-width: thin; scrollbar-color: var(--fill-strong) transparent;
+}
 .hud, .coach {
   grid-row: 1; grid-column: 1; justify-self: start; margin: 12px 0 0 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px;
   padding: 8px 14px; border-radius: 999px; font-size: 14px; box-shadow: var(--shadow); animation: pop-in .5s var(--spring) both;
@@ -700,18 +704,13 @@ kbd { font-family: var(--mono); font-size: 12px; padding: 3px 7px; border-radius
   .layout { grid-template-columns: minmax(0, 1fr); padding: 16px 12px 32px; gap: 16px; }
   .side { position: static; max-height: none; overflow: visible; }
 }
-/* Below tablet width the toolbar becomes a swipeable row of capsules under the brand. */
+/* Below tablet width the toolbar drops under the brand and wraps, so every action stays visible (nothing hidden off-screen). */
 @media (max-width: 880px) {
   .topbar { flex-direction: column; align-items: stretch; gap: 10px; padding: 12px; border-radius: 24px; }
   .brand p { display: block; }
-  .toolbar {
-    overflow-x: auto; scrollbar-width: none; scroll-snap-type: x proximity; padding: 2px 28px 2px 2px; margin: -2px;
-    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
-    mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
-  }
-  .toolbar::-webkit-scrollbar { display: none; }
-  .toolbar > * { scroll-snap-align: start; }
+  .toolbar { flex-wrap: wrap; }
   .toolbar .divider { display: none; }
+  .toolbar .btn.lang { margin-left: auto; }
 }
 @media (max-width: 640px) {
   :root { --top-gap: 8px; --radius: 20px; }
@@ -724,7 +723,8 @@ kbd { font-family: var(--mono); font-size: 12px; padding: 3px 7px; border-radius
   .seg-label { display: none; }
   .segmented { width: 100%; }
   .map-wrap { border-radius: 14px; }
-  .map { max-height: 62vh; max-height: 62dvh; }
+  /* Keep IDs and costs legible: the plan keeps a minimum drawing width and scrolls sideways inside the frame. */
+  .map-scroll .map { min-width: 600px; max-height: none; }
   .hud { font-size: 13px; margin: 8px 8px 0; padding: 6px 12px; }
   .zoom { right: 8px; top: 8px; }
   .zoom .btn.icon { width: 32px; min-width: 32px; min-height: 32px; }
