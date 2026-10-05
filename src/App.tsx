@@ -31,6 +31,8 @@ interface Saved {
 
 type Toast = { key: string; params?: Record<string, string | number>; id: number }
 
+const MAX_FILE_BYTES = 2 * 1024 * 1024
+
 const EMPTY: Hazards = { blocked_nodes: [], blocked_edges: [], closed_exits: [] }
 const cloneHazards = (h: Hazards): Hazards => ({
   blocked_nodes: [...h.blocked_nodes],
@@ -198,6 +200,8 @@ export default function App() {
 
   const readFile = (file: File | undefined) => {
     if (!file) return
+    // A floor plan is a few KB; refuse huge files instead of freezing the tab parsing them.
+    if (file.size > MAX_FILE_BYTES) return setErrors([{ key: 'err.size' }])
     file.text().then(accept, () => setErrors([{ key: 'err.read' }]))
   }
   const onFileInput = (e: ChangeEvent<HTMLInputElement>) => {

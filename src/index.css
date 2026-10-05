@@ -393,7 +393,7 @@ button { touch-action: manipulation; }
 .hud, .coach {
   order: -1; align-self: flex-start; margin: 12px 12px 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px;
   padding: 8px 14px; border-radius: 999px; font-size: 14px; box-shadow: var(--shadow); animation: pop-in .5s var(--spring) both;
-  background: var(--glass); border: 1px solid var(--glass-line); max-width: calc(100% - 24px);
+  background: var(--glass); border: 1px solid var(--glass-line); max-width: calc(100% - 150px);
   backdrop-filter: blur(18px) saturate(1.7); -webkit-backdrop-filter: blur(18px) saturate(1.7);
 }
 .hud-ok strong { color: var(--primary); }
@@ -409,7 +409,7 @@ button { touch-action: manipulation; }
   border-radius: 2px; transform: translateX(-50%) rotate(45deg);
 }
 .zoom {
-  position: absolute; right: 12px; bottom: 12px; display: flex; gap: 2px; padding: 3px; border-radius: 999px;
+  position: absolute; z-index: 2; right: 12px; top: 12px; display: flex; gap: 2px; padding: 3px; border-radius: 999px;
   background: var(--glass); border: 1px solid var(--glass-line); box-shadow: var(--shadow);
   backdrop-filter: blur(18px) saturate(1.7); -webkit-backdrop-filter: blur(18px) saturate(1.7);
 }
@@ -705,7 +705,9 @@ kbd { font-family: var(--mono); font-size: 12px; padding: 3px 7px; border-radius
   .map-wrap { border-radius: 14px; }
   .map { max-height: 62vh; max-height: 62dvh; }
   .hud { font-size: 13px; margin: 8px 8px 0; padding: 6px 12px; }
-  .zoom { right: 8px; bottom: 8px; }
+  .zoom { right: 8px; top: 8px; }
+  .zoom .btn.icon { width: 32px; min-width: 32px; min-height: 32px; }
+  .hud, .coach { max-width: calc(100% - 130px); }
   .coach { font-size: 13px; white-space: normal; text-align: center; border-radius: 16px; }
   .legend { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
   .legend::-webkit-scrollbar { display: none; }

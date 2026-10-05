@@ -10,6 +10,9 @@ type Props = {
 export function SplashIntro({ title, subtitle, onDone }: Props) {
   const [exiting, setExiting] = useState(false)
   const done = useRef(false)
+  // The parent passes a fresh callback each render; keep the latest in a ref so re-renders never restart the timers.
+  const onDoneRef = useRef(onDone)
+  useEffect(() => { onDoneRef.current = onDone })
   const reduce =
     typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
@@ -17,7 +20,7 @@ export function SplashIntro({ title, subtitle, onDone }: Props) {
     const finish = () => {
       if (done.current) return
       done.current = true
-      onDone()
+      onDoneRef.current()
     }
 
     if (reduce) {
@@ -31,7 +34,7 @@ export function SplashIntro({ title, subtitle, onDone }: Props) {
       window.clearTimeout(exitAt)
       window.clearTimeout(doneAt)
     }
-  }, [onDone, reduce])
+  }, [reduce])
 
   if (reduce) return null
 
