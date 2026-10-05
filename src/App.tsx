@@ -470,7 +470,7 @@ export default function App() {
                 </div>
               </div>
             </div>
-            <p className="help">{t(mode === 'start' ? 'help.start' : 'help.hazard')}</p>
+            <p key={mode} className={`help help-${mode}`}>{t(mode === 'start' ? 'help.start' : 'help.hazard')}</p>
             <MapView
               ref={svgRef}
               building={building}
@@ -509,7 +509,6 @@ export default function App() {
               )}
             </MapView>
             <Legend t={t} />
-            <p className="disclaimer">{t('app.disclaimer')}</p>
           </section>
 
           <aside className="side">
@@ -533,6 +532,7 @@ export default function App() {
             {sampleGraph && (
               <SelfCheck building={building} seen={seen} demoIndex={demo} lang={lang} t={t} onShow={showScenario} onDemo={runDemo} />
             )}
+            <p className="disclaimer">{t('app.disclaimer')}</p>
           </aside>
         </main>
       )}

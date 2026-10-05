@@ -158,7 +158,6 @@ body {
     radial-gradient(1100px 620px at 8% -12%, var(--bg-blob-1), transparent 62%),
     radial-gradient(900px 560px at 104% -6%, var(--bg-blob-2), transparent 60%),
     var(--bg);
-  background-attachment: fixed;
   color: var(--ink);
   font-family: var(--font);
   font-size: 15px;
@@ -223,6 +222,8 @@ button { touch-action: manipulation; }
 .btn.small { padding: 6px 13px; min-height: 32px; font-size: 13px; }
 .btn.icon { min-width: 38px; width: 38px; padding: 0; font-size: 17px; line-height: 1; }
 .btn.toggle-btn { color: var(--muted); }
+.btn-group { display: flex; padding: 0; border-radius: 999px; background: var(--fill); flex: none; }
+.btn-group .btn { background: transparent; }
 .btn.toggle-btn[aria-pressed='true'] { background: var(--cta); color: var(--cta-ink); }
 
 /* ---------- Layout */
@@ -252,11 +253,13 @@ button { touch-action: manipulation; }
 .map-head { display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; }
 .map-head h2 { font-size: 24px; font-weight: 800; letter-spacing: -.035em; }
 .map-head p { margin: 4px 0 0; font-size: 13px; }
+/* Mode hint: one quiet line with a mode-coloured dot, not another boxed panel */
 .help {
-  margin: 14px 0; padding: 10px 14px; border-radius: var(--radius-sm); background: var(--soft);
-  color: var(--muted); font-size: 14px; border: 1px solid var(--line);
-  animation: fade-in .35s var(--ease);
+  margin: 12px 0; display: flex; align-items: baseline; gap: 8px;
+  color: var(--muted); font-size: 13.5px; animation: fade-in .35s var(--ease);
 }
+.help::before { content: ''; flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--primary); transform: translateY(-1px); }
+.help-hazard::before { background: var(--danger); }
 
 /* ---------- Mode: iOS segmented control with a sliding thumb */
 .mode-pick { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -286,13 +289,14 @@ button { touch-action: manipulation; }
   transition: box-shadow .4s var(--ease), border-color .4s var(--ease);
 }
 .map-wrap:has(.mode-hazard) { border-color: color-mix(in srgb, var(--danger) 45%, transparent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--danger) 12%, transparent); }
-.disclaimer { margin: 14px 0 0; font-size: 12px; color: var(--muted); }
+.disclaimer { margin: 0; padding: 0 8px; font-size: 12px; color: var(--muted); text-align: center; }
 
 /* ---------- Legend */
-.legend { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 0; padding: 0; font-size: 12.5px; }
-.legend li { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 6px; border-radius: 999px; background: var(--fill); }
-.legend li.muted { background: transparent; }
-.legend svg { width: 18px; height: 18px; }
+/* Compact key: plain icon + label pairs, no chip backgrounds, so it reads as one quiet line under the map */
+.legend { list-style: none; display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 12px 0 0; padding: 0 4px; font-size: 12px; color: var(--muted); }
+.legend li { display: inline-flex; align-items: center; gap: 5px; }
+.legend li.muted { margin-left: auto; }
+.legend svg { width: 15px; height: 15px; }
 .lg-room { fill: var(--node-room); stroke: var(--node-stroke); stroke-width: 2; }
 .lg-junction { fill: var(--node-junction); stroke: var(--node-stroke); stroke-width: 2; }
 .lg-exit { fill: var(--exit); }
@@ -394,7 +398,7 @@ button { touch-action: manipulation; }
 .walker circle { fill: var(--warn); stroke: #fff; stroke-width: 3; filter: drop-shadow(0 4px 8px rgb(0 0 0 / 30%)); }
 
 /* ---------- Map overlays: HUD / coach mark and zoom share a bar above the drawing, so they never cover a node */
-.map-wrap { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+.map-wrap { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto minmax(0, 1fr); align-items: center; }
 .map-wrap > .map { grid-column: 1 / -1; grid-row: 2; }
 .hud, .coach {
   grid-row: 1; grid-column: 1; justify-self: start; margin: 12px 0 0 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px;
@@ -422,8 +426,8 @@ button { touch-action: manipulation; }
 .zoom .btn.icon { background: transparent; min-height: 34px; width: 34px; min-width: 34px; }
 @media (hover: hover) { .zoom .btn.icon:hover:not(:disabled) { background: var(--fill); } }
 .tip {
-  /* Solid inverted card (ink on light, cream on dark) so it never blends into the map; MapView clamps left/top. */
-  position: absolute; z-index: 30; left: 0; top: 0; pointer-events: none; max-width: min(300px, calc(100% - 16px));
+  /* Solid inverted card (ink on light, cream on dark) so it never blends into the map; MapView positions it via transform. */
+  position: absolute; z-index: 30; left: 0; top: 0; will-change: transform; pointer-events: none; max-width: min(300px, calc(100% - 16px));
   background: var(--cta); color: var(--cta-ink); padding: 9px 13px; border-radius: 12px;
   font-size: 12.5px; line-height: 1.45; box-shadow: var(--shadow-lg); white-space: normal; overflow-wrap: anywhere;
   animation: tip-in .2s var(--ease) both;
@@ -648,7 +652,7 @@ kbd { font-family: var(--mono); font-size: 12px; padding: 3px 7px; border-radius
 @keyframes pop-in { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: none; } }
 @keyframes chip-in { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: none; } }
 @keyframes toast-in { from { opacity: 0; transform: translateY(24px) scale(.9); } to { opacity: 1; transform: none; } }
-@keyframes tip-in { from { opacity: 0; transform: translateY(4px) scale(.97); } to { opacity: 1; transform: none; } }
+@keyframes tip-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes sheet-pop { from { opacity: 0; transform: translateY(24px) scale(.96); } to { opacity: 1; transform: none; } }
 @keyframes sheet-up { from { transform: translateY(100%); } to { transform: none; } }
 @keyframes backdrop-in { from { opacity: 0; } to { opacity: 1; } }
@@ -677,6 +681,16 @@ kbd { font-family: var(--mono); font-size: 12px; padding: 3px 7px; border-radius
 /* ---------- Responsive */
 @media (min-width: 1600px) {
   .layout { grid-template-columns: minmax(0, 1fr) 440px; }
+}
+/* Desktop app shell: the page never scrolls. The map card fills the full height beside the sidebar,
+   and the sidebar scrolls on its own, so no blank area opens up under the map. */
+@media (min-width: 981px) and (min-height: 620px) {
+  .app { height: 100vh; height: 100dvh; min-height: 0; }
+  .layout { min-height: 0; grid-template-rows: minmax(0, 1fr); align-items: stretch; padding-bottom: 16px; }
+  .map-card { display: flex; flex-direction: column; min-height: 0; }
+  .map-wrap { flex: 1; min-height: 0; }
+  .map { height: 100%; max-height: none; }
+  .side { position: static; max-height: none; min-height: 0; }
 }
 @media (max-width: 1180px) {
   .layout { grid-template-columns: minmax(0, 1fr) 360px; }
