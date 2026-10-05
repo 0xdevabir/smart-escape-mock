@@ -18,7 +18,7 @@ export async function exportSvgAsPng(svg: SVGSVGElement, fileName: string, scale
     if (el.classList.contains('route-line')) target.style.setProperty('stroke-dashoffset', '0')
   })
   // Hit areas, pulses, previews and the walkthrough marker are interaction-only.
-  clone.querySelectorAll('.edge-hit, .start-pulse, .preview-line, .ghost-line, .walker').forEach((n) => n.remove())
+  clone.querySelectorAll('.edge-hit, .start-pulse, .preview-line, .ghost-line, .walker, .route-flow').forEach((n) => n.remove())
 
   // Always export the whole building, even when the on-screen map is zoomed in.
   const [w, h] = (svg.dataset.full ?? '').split(' ').map(Number)

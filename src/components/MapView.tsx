@@ -155,7 +155,13 @@ export const MapView = forwardRef<SVGSVGElement, Props>(function MapView(
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
       >
+        <defs>
+          <pattern id="map-dots" width={24} height={24} patternUnits="userSpaceOnUse">
+            <circle className="map-dot" cx={12} cy={12} r={1.3} />
+          </pattern>
+        </defs>
         <rect className="map-bg" x={0} y={0} width={width} height={height} />
+        <rect className="map-dots" x={0} y={0} width={width} height={height} fill="url(#map-dots)" />
 
         {/* Corridors */}
         <g>
@@ -206,6 +212,8 @@ export const MapView = forwardRef<SVGSVGElement, Props>(function MapView(
 
         {/* Highlighted route, drawn on top of corridors; re-keyed so the draw animation replays on change */}
         {routePath.length > 1 && <polyline key={routeKey} className="route-line" pathLength={1} points={line(routePath)} />}
+        {/* Dots flowing from the start towards the exit, so the direction of travel is obvious */}
+        {routePath.length > 1 && <polyline key={`flow-${routeKey}`} className="route-flow" points={line(routePath)} />}
 
         {previewPath.length > 1 && <polyline className="preview-line" points={line(previewPath)} />}
 

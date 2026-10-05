@@ -5,6 +5,7 @@ import { ChangeBadge, RoutePanel, type Change } from './components/RoutePanel'
 import { HazardPanel } from './components/HazardPanel'
 import { HelpDialog } from './components/HelpDialog'
 import { SelfCheck } from './components/SelfCheck'
+import { SplashIntro } from './components/SplashIntro'
 import { exportSvgAsPng } from './lib/exportPng'
 import { formatNum, translate, type Lang } from './lib/i18n'
 import { computeRoute, rankedRoutes, regions as findRegions, trappedNodes } from './lib/route'
@@ -87,6 +88,7 @@ export default function App() {
   const [preview, setPreview] = useState<string[]>([])
   const [view, setView] = useState<View>(FIT)
   const [help, setHelp] = useState(false)
+  const [splash, setSplash] = useState(true)
   const [demo, setDemo] = useState<number | null>(null)
   const [seen, setSeen] = useState<Set<string>>(() => new Set())
   const fileRef = useRef<HTMLInputElement>(null)
@@ -371,6 +373,9 @@ export default function App() {
       }}
       onDrop={onDrop}
     >
+      {splash && (
+        <SplashIntro title={t('app.title')} subtitle={t('app.subtitle')} onDone={() => setSplash(false)} />
+      )}
       <header className="topbar">
         <div className="brand">
           <svg className="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
@@ -445,13 +450,16 @@ export default function App() {
                   )}
                 </p>
               </div>
-              <div className="segmented" role="radiogroup" aria-label={t('mode.label')}>
+              <div className="mode-pick">
                 <span className="seg-label">{t('mode.label')}</span>
-                {(['start', 'hazard'] as const).map((m) => (
-                  <button key={m} role="radio" aria-checked={mode === m} className={mode === m ? 'on' : ''} onClick={() => setMode(m)}>
-                    {t(`mode.${m}`)}
-                  </button>
-                ))}
+                <div className="segmented" role="radiogroup" aria-label={t('mode.label')} data-active={mode}>
+                  <span className="seg-thumb" aria-hidden="true" />
+                  {(['start', 'hazard'] as const).map((m) => (
+                    <button key={m} role="radio" aria-checked={mode === m} className={mode === m ? 'on' : ''} onClick={() => setMode(m)}>
+                      {t(`mode.${m}`)}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
             <p className="help">{t(mode === 'start' ? 'help.start' : 'help.hazard')}</p>
