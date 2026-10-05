@@ -398,12 +398,15 @@ export default function App() {
           <button className="btn primary" onClick={() => fileRef.current?.click()}>{t('btn.import')}</button>
           <button className="btn" onClick={loadSample}>{t('btn.sample')}</button>
           <button className="btn" onClick={reset} disabled={!building} title={t('btn.resetTitle')}>{t('btn.reset')}</button>
-          <button className="btn icon" onClick={undo} disabled={!past.length} aria-label={t('btn.undo')} title={`${t('btn.undo')} (Ctrl/⌘ Z)`}><Icon name="undo" /></button>
-          <button className="btn icon" onClick={redo} disabled={!future.length} aria-label={t('btn.redo')} title={`${t('btn.redo')} (Ctrl/⌘ ⇧ Z)`}><Icon name="redo" /></button>
+          <div className="btn-group" role="group">
+            <button className="btn icon" onClick={undo} disabled={!past.length} aria-label={t('btn.undo')} title={`${t('btn.undo')} (Ctrl/⌘ Z)`}><Icon name="undo" /></button>
+            <button className="btn icon" onClick={redo} disabled={!future.length} aria-label={t('btn.redo')} title={`${t('btn.redo')} (Ctrl/⌘ ⇧ Z)`}><Icon name="redo" /></button>
+          </div>
           <button className="btn" onClick={exportPng} disabled={!building}><Icon name="image" size={16} />{t('btn.png')}</button>
           <span className="divider" aria-hidden="true" />
-          <button className="btn toggle-btn" onClick={() => setContrast((c) => !c)} aria-pressed={contrast}>
-            <Icon name="contrast" size={16} />{t(contrast ? 'contrast.on' : 'contrast.off')}
+          <button className="btn icon toggle-btn" onClick={() => setContrast((c) => !c)} aria-pressed={contrast}
+            aria-label={t(contrast ? 'contrast.on' : 'contrast.off')} title={t(contrast ? 'contrast.on' : 'contrast.off')}>
+            <Icon name="contrast" />
           </button>
           <button className="btn icon" onClick={() => setHelp(true)} aria-label={t('help.title')} title={`${t('help.title')} (?)`}><Icon name="help" /></button>
           <button

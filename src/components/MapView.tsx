@@ -50,6 +50,37 @@ const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v
 
 type Tip = { x: number; y: number; lines: string[] }
 
+const ZOOM_MS = 260
+const reducedMotion = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+
+/** Eases from the displayed view to the target one; snaps while dragging or with reduced motion. */
+function useTweenedView(target: View, drag: { current: unknown }) {
+  const [shown, setShown] = useState(target)
+  const cur = useRef(target)
+  useEffect(() => {
+    const from = cur.current
+    if (from.k === target.k && from.cx === target.cx && from.cy === target.cy) return
+    if (drag.current || reducedMotion()) {
+      cur.current = target
+      setShown(target)
+      return
+    }
+    const t0 = performance.now()
+    let raf = 0
+    const step = (now: number) => {
+      const p = Math.min(1, (now - t0) / ZOOM_MS)
+      const e = 1 - (1 - p) ** 3
+      const v = { k: from.k + (target.k - from.k) * e, cx: from.cx + (target.cx - from.cx) * e, cy: from.cy + (target.cy - from.cy) * e }
+      cur.current = p === 1 ? target : v
+      setShown(cur.current)
+      if (p < 1) raf = requestAnimationFrame(step)
+    }
+    raf = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(raf)
+  }, [target, drag])
+  return shown
+}
+
 export const MapView = forwardRef<SVGSVGElement, Props>(function MapView(
   { building, hazards, start, routePath, steps, ghostPath, previewPath, walkIndex, trapped, distances, mode, view, lang, t,
     onView, onNode, onEdge, children }, ref,
@@ -61,17 +92,23 @@ export const MapView = forwardRef<SVGSVGElement, Props>(function MapView(
   const tipRef = useRef<HTMLDivElement>(null)
 
   // Keep the tooltip fully inside the map frame: clamp horizontally, and flip below the pointer near the top edge.
-  useLayoutEffect(() => {
+  // Written straight to the DOM so following the pointer never re-renders the map.
+  const positionTip = (x: number, y: number) => {
     const el = tipRef.current, wrap = wrapRef.current
-    if (!tip || !el || !wrap) return
+    if (!el || !wrap) return
     const m = 8, gap = 14
     const w = el.offsetWidth, h = el.offsetHeight
-    const left = Math.max(m, Math.min(tip.x - w / 2, wrap.clientWidth - w - m))
-    const above = tip.y - h - gap
-    const top = above >= m ? above : Math.max(m, Math.min(tip.y + gap + 6, wrap.clientHeight - h - m))
-    el.style.left = `${left}px`
-    el.style.top = `${top}px`
+    const left = Math.max(m, Math.min(x - w / 2, wrap.clientWidth - w - m))
+    const above = y - h - gap
+    const top = above >= m ? above : Math.max(m, Math.min(y + gap + 6, wrap.clientHeight - h - m))
+    el.style.transform = `translate3d(${left}px, ${top}px, 0)`
+  }
+  useLayoutEffect(() => {
+    if (tip) positionTip(tip.x, tip.y)
   }, [tip])
+
+  // Zoom changes glide to the new viewBox instead of jumping; dragging stays 1:1 with the pointer.
+  const shown = useTweenedView(view, drag)
 
   const blockedNodes = new Set(hazards.blocked_nodes)
   const closedExits = new Set(hazards.closed_exits)
@@ -88,9 +125,9 @@ export const MapView = forwardRef<SVGSVGElement, Props>(function MapView(
   }, [building])
 
   // Current viewBox derived from the zoom level, clamped so the map never leaves the frame.
-  const vw = width / view.k, vh = height / view.k
-  const vx = clamp(view.cx * width - vw / 2, 0, width - vw)
-  const vy = clamp(view.cy * height - vh / 2, 0, height - vh)
+  const vw = width / shown.k, vh = height / shown.k
+  const vx = clamp(shown.cx * width - vw / 2, 0, width - vw)
+  const vy = clamp(shown.cy * height - vh / 2, 0, height - vh)
 
   // Ctrl/⌘ + wheel (and trackpad pinch, which the browser reports the same way) zooms; a plain wheel still scrolls the page.
   const viewRef = useRef(view)
@@ -129,7 +166,11 @@ export const MapView = forwardRef<SVGSVGElement, Props>(function MapView(
 
   const showTip = (lines: string[]) => ({
     onPointerEnter: (e: PointerEvent) => place(e.clientX, e.clientY, lines),
-    onPointerMove: (e: PointerEvent) => place(e.clientX, e.clientY, lines),
+    onPointerMove: (e: PointerEvent) => {
+      const r = wrapRef.current?.getBoundingClientRect()
+      if (tipRef.current && r) positionTip(e.clientX - r.left, e.clientY - r.top)
+      else place(e.clientX, e.clientY, lines)
+    },
     onPointerLeave: () => setTip(null),
     onFocus: (e: FocusEvent) => {
       const r = e.currentTarget.getBoundingClientRect()
