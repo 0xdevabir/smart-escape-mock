@@ -228,12 +228,12 @@ button, select, input { font: inherit; color: inherit; }
 .node.is-route .shape { stroke: var(--primary); stroke-width: 4; }
 .node.is-route.type-room .shape, .node.is-route.type-junction .shape { fill: var(--primary-soft); }
 .node.is-route.type-exit .shape { stroke: var(--primary); }
-.node.is-start .shape { fill: var(--primary); stroke: var(--primary); }
+.node.is-start .shape, .node.is-route.is-start .shape { fill: var(--primary); stroke: var(--primary); }
 .node.is-start .node-id { fill: var(--primary-ink); }
 .node.is-blocked .shape { fill: var(--danger); stroke: var(--danger); }
 .node.is-blocked .node-id, .node.is-closed .node-id { fill: #fff; }
 .node.is-closed .shape { fill: var(--closed); stroke: var(--closed); stroke-dasharray: 5 3; }
-.node-x line { stroke: #fff; stroke-width: 3; stroke-linecap: round; opacity: .9; pointer-events: none; }
+.node-x line { stroke: #fff; stroke-width: 3; stroke-linecap: round; opacity: .45; pointer-events: none; }
 .node.is-start.is-blocked .shape { stroke: var(--primary); stroke-width: 4; }
 
 .start-pulse { fill: none; stroke: var(--primary); stroke-width: 3; opacity: 0; animation: pulse .7s ease-out 1; transform-box: fill-box; transform-origin: center; }
