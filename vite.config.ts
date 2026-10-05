@@ -1,7 +1,10 @@
+import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
-// https://vite.dev/config/
+// Relative base so the static build works on GitHub Pages sub-paths, Netlify, Vercel or Cloudflare Pages alike.
 export default defineConfig({
-  plugins: [react()],
+  base: './',
+  plugins: [react(), tailwindcss()],
+  build: { chunkSizeWarningLimit: 1200 },
 })
