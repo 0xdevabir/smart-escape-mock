@@ -1,5 +1,5 @@
 {
-  "name": "smart-escape",
+  "name": "waynest",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -25,4 +25,5 @@
     "vitest": "^5.0.3"
   }
 }
+
 

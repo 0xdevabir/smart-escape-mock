@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="docs/assets/smart-escape-icon.svg" alt="Smart Escape" width="112" />
+<img src="docs/assets/waynest-icon.svg" alt="WayNest" width="112" />
 
-# Smart Escape
+# WayNest
 
 ### Interactive evacuation route simulator — pick a start, toggle hazards, watch the lowest-cost exit path update instantly in English and বাংলা
 
@@ -23,7 +23,7 @@
 
 > **Why is this hard?** An evacuation map is only useful while the building keeps changing. A blocked corridor, a closed exit, a room that just became unsafe — the “best” path a second ago may be wrong now. Hard-coding paths fails the moment the hazard map moves.
 >
-> **Smart Escape answers one question, on every click:** *from this start, through the current hazards, what is the lowest-cost route to an open exit — and why that path, not another with the same cost?*
+> **WayNest answers one question, on every click:** *from this start, through the current hazards, what is the lowest-cost route to an open exit — and why that path, not another with the same cost?*
 
 <table>
 <tr>
@@ -36,7 +36,7 @@
 </table>
 
 <div align="center">
-<img src="screenshots/01-baseline-R1.png" alt="Smart Escape map with R1 selected and the lowest-cost route to exit E1 highlighted" width="92%" />
+<img src="screenshots/01-baseline-R1.png" alt="WayNest map with R1 selected and the lowest-cost route to exit E1 highlighted" width="92%" />
 </div>
 
 <div align="center">
@@ -54,7 +54,7 @@
 
 ## 🎯 The problem and how we answer it
 
-| The problem | What Smart Escape does | Where to see it |
+| The problem | What WayNest does | Where to see it |
 | --- | --- | --- |
 | Paths go stale the moment a hazard changes | Dijkstra recalculates **synchronously** after every toggle | Map highlight · Route panel |
 | Ties between equal-cost paths are ambiguous | Lexicographically smallest exit ID, then smallest node sequence | *Why this path?* · Tie screenshot |
@@ -90,7 +90,7 @@ flowchart LR
 sequenceDiagram
     autonumber
     actor U as User
-    participant UI as Smart Escape UI
+    participant UI as WayNest UI
     participant E as Route engine
     U->>UI: Block corridor / close exit / pick start
     UI->>UI: Push hazard history (undo stack)
@@ -207,7 +207,7 @@ flowchart TB
 ```
 
 ```
-smart-escape/
+waynest/
 ├── public/building.json     # East Annex sample
 ├── docs/assets/             # README icon
 ├── screenshots/             # feature tour images
