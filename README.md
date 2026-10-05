@@ -1,4 +1,9 @@
+<div align="center">
+
+<img src="docs/assets/smart-escape-icon.svg" alt="Smart Escape" width="112" />
+
 # Smart Escape
+
 ### Interactive evacuation route simulator — pick a start, toggle hazards, watch the lowest-cost exit path update instantly in English and বাংলা
 
 ![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
@@ -8,23 +13,38 @@
 ![i18n](https://img.shields.io/badge/i18n-English%20%2B%20বাংলা-0EA5E9?style=for-the-badge)
 ![Frontend only](https://img.shields.io/badge/frontend%20only-no%20backend-success?style=for-the-badge)
 
-[Quick start](#-run-it-in-3-commands) · [How it works](#-how-it-works) · [Sample checks](#-sample-checks--41) · [Feature tour](#-feature-tour) · [Two-minute demo](#-two-minute-demo) · [What this is not](#%EF%B8%8F-what-this-is-not)
-
 **AI DevFest Vibe Coding** · practice / mock test · frontend-only
 
-> **Why is this hard?** An evacuation map is only useful while the building keeps changing. A blocked corridor, a closed exit, a room that just became unsafe — the “best” path a second ago may be wrong now. Hard-coding paths fails the moment the hazard map moves.
+[Live demo](https://0xdevabir.github.io/smart-scape-mock/) · [Repository](https://github.com/0xdevabir/smart-scape-mock) · [Quick start](#-run-it-in-3-commands) · [How it works](#-how-it-works) · [Sample checks](#-sample-checks--41) · [Feature tour](#%EF%B8%8F-feature-tour) · [Two-minute demo](#-two-minute-demo) · [What this is not](#%EF%B8%8F-what-this-is-not)
 
+</div>
+
+---
+
+> **Why is this hard?** An evacuation map is only useful while the building keeps changing. A blocked corridor, a closed exit, a room that just became unsafe — the “best” path a second ago may be wrong now. Hard-coding paths fails the moment the hazard map moves.
+>
 > **Smart Escape answers one question, on every click:** *from this start, through the current hazards, what is the lowest-cost route to an open exit — and why that path, not another with the same cost?*
 
-| 8 nodes · 9 corridors East Annex sample | 5 / 5 §4.1 sample checks | 40 / 40 unit tests | EN + বাংলা full UI | 0 backend calls everything local |
-| --------------------------------------- | ------------------------ | ------------------ | ------------------ | -------------------------------- |
+<table>
+<tr>
+<td align="center"><h2>8</h2>nodes · 9 corridors<br/>East Annex sample</td>
+<td align="center"><h2>5 / 5</h2>§4.1 sample checks<br/>in Judge mode</td>
+<td align="center"><h2>40 / 40</h2>unit tests<br/>passing</td>
+<td align="center"><h2>EN + বাংলা</h2>full UI<br/>including errors</td>
+<td align="center"><h2>0</h2>backend calls<br/>everything local</td>
+</tr>
+</table>
 
-| | |
-|---|---|
-| **Name** | `<your full name>` |
-| **Registration number** | `261-15-001` |
-| **Live link (HTTPS)** | https://0xdevabir.github.io/smart-scape-mock/ |
-| **Repository** | https://github.com/0xdevabir/smart-scape-mock |
+<div align="center">
+<img src="screenshots/01-baseline-R1.png" alt="Smart Escape map with R1 selected and the lowest-cost route to exit E1 highlighted" width="92%" />
+</div>
+
+<table>
+<tr><td align="right"><b>Name</b></td><td><code>&lt;your full name&gt;</code></td></tr>
+<tr><td align="right"><b>Registration number</b></td><td><code>261-15-001</code></td></tr>
+<tr><td align="right"><b>Live link (HTTPS)</b></td><td><a href="https://0xdevabir.github.io/smart-scape-mock/">https://0xdevabir.github.io/smart-scape-mock/</a></td></tr>
+<tr><td align="right"><b>Repository</b></td><td><a href="https://github.com/0xdevabir/smart-scape-mock">https://github.com/0xdevabir/smart-scape-mock</a></td></tr>
+</table>
 
 ---
 
@@ -118,17 +138,33 @@ xychart-beta
 
 ## 🖥️ Feature tour
 
-| [Baseline: R1 → E1 cost 7](screenshots/01-baseline-R1.png)**Baseline.** Pick R1 and the cheapest exit lights up: `R1 → C1 → C2 → E1`, cost 7. | [Reroute after blocking C2](screenshots/02-reroute-after-blocking-C2.png)**Live reroute.** Block C2 and the path flips to E2 at cost 11, with a cost-delta badge. |
-| --- | --- |
-| [No route when exits are closed](screenshots/03-no-route-exits-closed.png)**No route.** Close E1 and E2 — status becomes *No route available* / *কোনো পথ পাওয়া যায়নি*. | [Start blocked](screenshots/04-start-blocked.png)**Start blocked.** Block the starting room — clear bilingual failure, not a silent empty map. |
-| [Bangla UI](screenshots/05-bangla.png)**বাংলা.** Full UI translation, including statuses, errors, help and Bangla digits. | [Invalid import](screenshots/06-invalid-file.png)**Strict import.** A bad `building.json` shows every §3.1 violation; the current map stays. |
-| [Why this path / tie](screenshots/07-why-this-path-tie.png)**Why this path?** Cost breakdown, exit-tie reason, and every equal-cost alternative marked. | [Help & shortcuts](screenshots/08-help-shortcuts.png)**Help.** Keyboard map, routing rules and validation catalog behind **?**. |
-| [Judge mode 5/5](screenshots/09-judge-mode.png)**Judge mode.** The five §4.1 checks run through the real engine — **Run all 5** plays them as a demo. | |
+<table>
+<tr>
+<td width="50%"><img src="screenshots/01-baseline-R1.png" alt="Baseline route from R1 to E1 at cost 7" /><br/><b>Baseline.</b> Pick R1 and the cheapest exit lights up: <code>R1 → C1 → C2 → E1</code>, cost 7.</td>
+<td width="50%"><img src="screenshots/02-reroute-after-blocking-C2.png" alt="Route rerouted to E2 after corridor C2 is blocked" /><br/><b>Live reroute.</b> Block C2 and the path flips to E2 at cost 11, with a cost-delta badge and ghost of the old path.</td>
+</tr>
+<tr>
+<td><img src="screenshots/03-no-route-exits-closed.png" alt="No route when both exits are closed" /><br/><b>No route.</b> Close E1 and E2 — status becomes <em>No route available</em> / <em>কোনো পথ পাওয়া যায়নি</em>.</td>
+<td><img src="screenshots/04-start-blocked.png" alt="Starting location blocked with bilingual error" /><br/><b>Start blocked.</b> Block the starting room — clear bilingual failure, not a silent empty map.</td>
+</tr>
+<tr>
+<td><img src="screenshots/05-bangla.png" alt="Full Bangla UI" /><br/><b>বাংলা.</b> Full UI translation, including statuses, errors, help and Bangla digits.</td>
+<td><img src="screenshots/06-invalid-file.png" alt="Invalid building.json import errors" /><br/><b>Strict import.</b> A bad <code>building.json</code> shows every §3.1 violation; the current map stays.</td>
+</tr>
+<tr>
+<td><img src="screenshots/07-why-this-path-tie.png" alt="Why this path panel with tie explanation" /><br/><b>Why this path?</b> Cost breakdown, exit-tie reason, and every equal-cost alternative marked.</td>
+<td><img src="screenshots/08-help-shortcuts.png" alt="Help dialog with shortcuts and rules" /><br/><b>Help.</b> Keyboard map, routing rules and validation catalog behind <b>?</b>.</td>
+</tr>
+<tr>
+<td colspan="2"><img src="screenshots/09-judge-mode.png" alt="Judge mode running five sample checks" /><br/><b>Judge mode.</b> The five §4.1 checks run through the real engine — <b>Run all 5</b> plays them as a demo.</td>
+</tr>
+</table>
 
 ### Also built in
 
 | Surface | What it does |
 | --- | --- |
+| **Animated intro** | Brand splash on load — logo assembles, path races, zoom reveal; respects `prefers-reduced-motion` |
 | **Top 3 routes** | Yen-style k-shortest across open exits; hover/focus previews the path |
 | **Walkthrough + Play** | Step list and a marker that walks the route |
 | **What changed** | Previous route stays as a faint ghost; badge shows `7 → 11 (+4)` or *Route lost* |
@@ -168,10 +204,11 @@ flowchart TB
 ```
 smart-escape/
 ├── public/building.json     # East Annex sample
+├── docs/assets/             # README icon
 ├── screenshots/             # feature tour images
 ├── src/
 │   ├── App.tsx              # state, shortcuts, persistence
-│   ├── components/          # MapView · RoutePanel · HazardPanel · SelfCheck · Help
+│   ├── components/          # MapView · RoutePanel · HazardPanel · SelfCheck · Help · SplashIntro
 │   └── lib/
 │       ├── route.ts         # Dijkstra, ties, ranked routes, regions
 │       ├── validate.ts      # strict building.json rules
@@ -219,7 +256,7 @@ The build is fully static (`base: './'`). Host `dist/` on GitHub Pages, Netlify,
 
 | Time | Beat |
 | --- | --- |
-| **0:00** | Open the live link — East Annex loads, brand and map fill the first viewport. |
+| **0:00** | Open the live link — animated brand intro, then East Annex and the map fill the viewport. |
 | **0:20** | Click **R1** → route `R1 → C1 → C2 → E1`, cost 7. |
 | **0:40** | Block **C2** → reroute to E2 at cost 11; show ghost path + delta badge. |
 | **1:00** | Open *Why this path?* — cost breakdown and the C1-vs-R2 tie. |

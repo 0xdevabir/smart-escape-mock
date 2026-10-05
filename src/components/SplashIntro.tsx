@@ -55,13 +55,13 @@ export function SplashIntro({ title, subtitle, onDone }: Props) {
           <svg className="splash-svg" viewBox="0 0 64 64" aria-hidden="true">
             <defs>
               <linearGradient id="splash-tile" x1="10" y1="6" x2="54" y2="58" gradientUnits="userSpaceOnUse">
-                <stop stopColor="#3dd68c" />
-                <stop offset="0.45" stopColor="#1a9a64" />
-                <stop offset="1" stopColor="#0d5c3c" />
+                <stop stopColor="#b9cdb2" />
+                <stop offset="0.45" stopColor="#7f9c77" />
+                <stop offset="1" stopColor="#4a6644" />
               </linearGradient>
               <linearGradient id="splash-ink" x1="16" y1="12" x2="52" y2="48" gradientUnits="userSpaceOnUse">
                 <stop stopColor="#ffffff" />
-                <stop offset="1" stopColor="#c9ffe6" />
+                <stop offset="1" stopColor="#f5f5dc" />
               </linearGradient>
               <filter id="splash-bloom" x="-50%" y="-50%" width="200%" height="200%">
                 <feGaussianBlur stdDeviation="2.4" result="b" />
@@ -110,7 +110,7 @@ export function SplashIntro({ title, subtitle, onDone }: Props) {
             </g>
 
             {/* Courier racing the escape path once assembled */}
-            <circle className="splash-courier" r="3.4" fill="#eafff5">
+            <circle className="splash-courier" r="3.4" fill="#96eefb">
               <animateMotion
                 path="M14 46 H24 V36 H34 V26 H44 V18"
                 dur="0.85s"
