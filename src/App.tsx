@@ -16,6 +16,7 @@ import { FIT, zoomBy, type View } from './lib/view'
 import { parseBuildingText, validateBuilding, type ValidationError } from './lib/validate'
 
 const STORE_KEY = 'smart-escape:v1'
+const SPLASH_KEY = 'smart-escape:splash'
 const SAMPLE_URL = `${import.meta.env.BASE_URL}building.json`
 const MAX_ERRORS = 12
 const MAX_HISTORY = 100
@@ -44,6 +45,8 @@ const toggle = (arr: string[], id: string) => (arr.includes(id) ? arr.filter((x)
 
 function loadSaved(): Partial<Saved> | null {
   try {
+    // `?fresh` in the URL starts from a clean slate (the sample file), ignoring any saved session.
+    if (new URLSearchParams(location.search).has('fresh')) localStorage.removeItem(STORE_KEY)
     const raw = localStorage.getItem(STORE_KEY)
     if (!raw) return null
     const s = JSON.parse(raw) as Partial<Saved>
@@ -91,7 +94,10 @@ export default function App() {
   const [preview, setPreview] = useState<string[]>([])
   const [view, setView] = useState<View>(FIT)
   const [help, setHelp] = useState(false)
-  const [splash, setSplash] = useState(true)
+  // The intro plays once per tab session so reloads during testing go straight to the map.
+  const [splash, setSplash] = useState(() => {
+    try { return !sessionStorage.getItem(SPLASH_KEY) } catch { return true }
+  })
   const [demo, setDemo] = useState<number | null>(null)
   const [seen, setSeen] = useState<Set<string>>(() => new Set())
   const fileRef = useRef<HTMLInputElement>(null)
@@ -379,7 +385,10 @@ export default function App() {
       onDrop={onDrop}
     >
       {splash && (
-        <SplashIntro title={t('app.title')} subtitle={t('app.subtitle')} onDone={() => setSplash(false)} />
+        <SplashIntro title={t('app.title')} subtitle={t('app.subtitle')} onDone={() => {
+          setSplash(false)
+          try { sessionStorage.setItem(SPLASH_KEY, '1') } catch { /* storage off: the intro just replays */ }
+        }} />
       )}
       <header className="topbar">
         <div className="brand">

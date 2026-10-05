@@ -15,7 +15,7 @@
 
 **AI DevFest Vibe Coding** · practice / mock test · frontend-only
 
-[Live demo](https://0xdevabir.github.io/smart-scape-mock/) · [Repository](https://github.com/0xdevabir/smart-scape-mock) · [Quick start](#-run-it-in-3-commands) · [How it works](#-how-it-works) · [Sample checks](#-sample-checks--41) · [Feature tour](#%EF%B8%8F-feature-tour) · [Two-minute demo](#-two-minute-demo) · [What this is not](#%EF%B8%8F-what-this-is-not)
+[Live demo](https://smart-escape.devabir.me/) · [Repository](https://github.com/0xdevabir/smart-escape-mock) · [Quick start](#-run-it-in-3-commands) · [How it works](#-how-it-works) · [Sample checks](#-sample-checks--41) · [Feature tour](#%EF%B8%8F-feature-tour) · [Two-minute demo](#-two-minute-demo) · [What this is not](#%EF%B8%8F-what-this-is-not)
 
 </div>
 
@@ -45,8 +45,8 @@
 |---|---|
 | **Name** | `<your full name>` |
 | **Registration number** | `261-15-001` |
-| **Live link (HTTPS)** | [0xdevabir.github.io/smart-scape-mock](https://0xdevabir.github.io/smart-scape-mock/) |
-| **Repository** | [github.com/0xdevabir/smart-scape-mock](https://github.com/0xdevabir/smart-scape-mock) |
+| **Live link (HTTPS)** | [smart-escape.devabir.me](https://smart-escape.devabir.me/) |
+| **Repository** | [github.com/0xdevabir/smart-escape-mock](https://github.com/0xdevabir/smart-escape-mock) |
 
 </div>
 
@@ -281,6 +281,35 @@ The build is fully static (`base: './'`). Host `dist/` on GitHub Pages, Netlify,
 
 ---
 
+## 🐞 Known issues
+
+- Dataset labels and IDs are shown exactly as written in the file; only the app's own text switches between English and Bangla.
+- The map is scaled to fit the file's coordinates. In very dense graphs, labels can overlap; zoom in (`+`) to read them.
+- The last dataset and hazards are restored from `localStorage`. Open the app with `?fresh` (for example `https://smart-escape.devabir.me/?fresh`) to start again from the sample file.
+- The Bangla web font loads from Google Fonts. If that is blocked, the system Bangla font is used instead.
+- Judge mode only appears when the official sample graph is loaded, because its expected results only apply to that graph.
+
+---
+
+## 🤖 AI tools used
+
+| Tool | Used for |
+| --- | --- |
+| **Claude Code** | Reading the problem statement and rulebook, the routing engine and validation, the React UI, tests, README |
+| **Cursor** | Feature checklist from the rulebook, UI polish, intro animation, naming fixes |
+
+The full prompt history is in [`PROMPTS.md`](PROMPTS.md).
+
+## ⭐ Most useful prompt
+
+The requirements checklist prompt used to check and finish every mandatory feature (shortened):
+
+> Must-essential (mandatory — fail without these): local building.json import in the browser · strict JSON validation + clear reject message for bad/inconsistent files · render full map: nodes at x,y, edges, readable labels, distinct types, visible corridor costs · select start = unblocked room or junction only · lowest-cost route to an open exit (Dijkstra on edge costs — not pixel distance) · show node sequence + chosen exit + total cost · block/unblock rooms, junctions and corridors · close/reopen exits · instant recalculate on every change · Reset → restore the file's initial_state · "No route available" / "Starting location blocked" · tie-break: min cost → smallest exit ID → lexicographically smallest node-ID path · Bangla + English for everything · subtle animations, no flash or delay · sample checks pass.
+
+It worked because it spelled out the exact tie-break order and both failure messages, so nothing was left to guess.
+
+---
+
 ## 🙏 Acknowledgments
 
-Built for **AI DevFest Vibe Coding** (practice / mock test). Routing follows the published §3.3 rules; sample checks follow §4.1. Inspiration for this README’s structure: [FraudLens](https://github.com/0xdevabir/FraudLens) and [Emberfall / runtime-terrors](https://github.com/0xdevabir/runtime-terrors).
+Built for **AI DevFest Vibe Coding** (practice / mock test). Routing follows the published §3.3 rules; sample checks follow §4.1.

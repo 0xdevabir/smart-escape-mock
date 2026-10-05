@@ -46,7 +46,7 @@
   --radius-sm: 14px;
   --shadow: 0 1px 1px rgb(27 27 27 / 4%), 0 10px 30px -12px rgb(27 27 27 / 16%);
   --shadow-lg: 0 30px 70px -24px rgb(27 27 27 / 35%), 0 2px 6px rgb(27 27 27 / 6%);
-  --font: 'Geist', 'Noto Sans Bengali', -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font: 'Geist', 'Noto Sans Bengali', 'Nirmala UI', 'Bangla Sangam MN', 'Kohinoor Bangla', -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   --edge-w: 3;
   --route-w: 7;

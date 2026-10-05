@@ -30,9 +30,14 @@ export function SplashIntro({ title, subtitle, onDone }: Props) {
 
     const exitAt = window.setTimeout(() => setExiting(true), 2200)
     const doneAt = window.setTimeout(finish, 2800)
+    // Controls are never delayed: the stage ignores pointer events, and any click or key ends the intro at once.
+    window.addEventListener('pointerdown', finish, true)
+    window.addEventListener('keydown', finish, true)
     return () => {
       window.clearTimeout(exitAt)
       window.clearTimeout(doneAt)
+      window.removeEventListener('pointerdown', finish, true)
+      window.removeEventListener('keydown', finish, true)
     }
   }, [reduce])
 
