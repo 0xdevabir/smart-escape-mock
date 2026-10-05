@@ -35,6 +35,12 @@ export interface Step {
   cost: number
 }
 
+export interface RankedRoute {
+  path: string[]
+  exit: string
+  cost: number
+}
+
 export type RouteResult =
   | { status: 'no-start' }
   | { status: 'start-blocked' }
@@ -45,6 +51,13 @@ export type RouteResult =
       exit: string
       cost: number
       steps: Step[]
+      /** Open exits that tie with the chosen one on cost (the chosen exit included), sorted by ID. */
+      tiedExits: string[]
+      /** Equal-cost paths to the chosen exit in lexicographic order (capped), and how many exist. */
+      tiedPaths: string[][]
+      tiedPathCount: number
       /** Cheapest route to every other reachable open exit, sorted by cost then exit ID. */
-      alternatives: { exit: string; cost: number; path: string[] }[]
+      otherExits: RankedRoute[]
+      /** Shortest distance from the start to every reachable node. */
+      distances: Map<string, number>
     }

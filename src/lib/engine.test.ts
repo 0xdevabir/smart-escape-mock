@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { computeRoute } from './route'
+import { computeRoute, rankedRoutes, trappedNodes } from './route'
 import type { Building, Hazards } from './types'
 import { parseBuildingText, validateBuilding } from './validate'
 
@@ -75,9 +75,8 @@ describe('routing rules (3.3, 3.4)', () => {
     expect(computeRoute(b, h({ closed_exits: ['E1'] }), 'S').status).toBe('no-route')
   })
   it('blocked corridor removes only that connection', () => {
-    const r = computeRoute(sample, h({ blocked_edges: ['K2'] }), 'R1')
-    // C2 still reachable through C1-C3-C4-C2? cheapest is now R1-C1-C3-C4-E2 = 11
-    expect(r).toMatchObject({ status: 'ok', cost: 11, exit: 'E2' })
+    const r = computeRoute(sample, h({ blocked_edges: ['L02'] }), 'R1')
+    expect(r).toMatchObject({ status: 'ok', cost: 11, exit: 'E2', path: ['R1', 'C1', 'C3', 'C4', 'E2'] })
   })
   it('disconnected component -> no route', () => {
     const b = mk([['S', 'room'], ['T', 'room'], ['X', 'exit']], [['T', 'X', 1]])
@@ -86,9 +85,51 @@ describe('routing rules (3.3, 3.4)', () => {
   it('no start selected', () => {
     expect(computeRoute(sample, base, null).status).toBe('no-start')
   })
-  it('alternatives list the other reachable exits', () => {
+  it('other exits list the cheapest route to each remaining exit', () => {
     const r = computeRoute(sample, base, 'R1')
-    expect(r.status === 'ok' && r.alternatives).toEqual([{ exit: 'E2', cost: 10, path: ['R1', 'C1', 'C2', 'C4', 'E2'] }])
+    expect(r.status === 'ok' && r.otherExits).toEqual([{ exit: 'E2', cost: 10, path: ['R1', 'C1', 'C2', 'C4', 'E2'] }])
+  })
+  it('blocking C2 ties two cost-11 paths; C1 < R2 wins and the tie is reported', () => {
+    const r = computeRoute(sample, h({ blocked_nodes: ['C2'] }), 'R1')
+    expect(r).toMatchObject({
+      path: ['R1', 'C1', 'C3', 'C4', 'E2'],
+      tiedExits: ['E2'],
+      tiedPathCount: 2,
+      tiedPaths: [['R1', 'C1', 'C3', 'C4', 'E2'], ['R1', 'R2', 'C3', 'C4', 'E2']],
+    })
+  })
+  it('equal-cost exits are both reported as tied', () => {
+    const b = mk([['S', 'room'], ['E2', 'exit'], ['E1', 'exit']], [['S', 'E2', 1], ['S', 'E1', 1]])
+    expect(computeRoute(b, base, 'S')).toMatchObject({ exit: 'E1', tiedExits: ['E1', 'E2'] })
+  })
+})
+
+describe('ranked routes and trapped nodes', () => {
+  it('top 3 routes from R1 ordered by cost then sequence', () => {
+    expect(rankedRoutes(sample, base, 'R1')).toEqual([
+      { exit: 'E1', cost: 7, path: ['R1', 'C1', 'C2', 'E1'] },
+      { exit: 'E2', cost: 10, path: ['R1', 'C1', 'C2', 'C4', 'E2'] },
+      { exit: 'E2', cost: 11, path: ['R1', 'C1', 'C3', 'C4', 'E2'] },
+    ])
+  })
+  it('first ranked route always equals the main route', () => {
+    for (const s of ['R1', 'R2', 'C1', 'C2', 'C3', 'C4']) {
+      for (const hz of [base, h({ blocked_nodes: ['C2'] }), h({ closed_exits: ['E1'] }), h({ blocked_edges: ['L03', 'L07'] })]) {
+        const r = computeRoute(sample, hz, s)
+        const top = rankedRoutes(sample, hz, s)[0]
+        if (r.status === 'ok') expect(top).toEqual({ exit: r.exit, cost: r.cost, path: r.path })
+        else expect(top).toBeUndefined()
+      }
+    }
+  })
+  it('routes never pass through one exit to reach another', () => {
+    const b = mk([['S', 'room'], ['E1', 'exit'], ['E2', 'exit']], [['S', 'E1', 1], ['E1', 'E2', 1]])
+    expect(rankedRoutes(b, base, 'S')).toEqual([{ exit: 'E1', cost: 1, path: ['S', 'E1'] }])
+  })
+  it('trapped nodes cannot reach any open exit', () => {
+    expect(trappedNodes(sample, base)).toEqual([])
+    expect(trappedNodes(sample, h({ blocked_nodes: ['C1', 'C3'] }))).toEqual(['R1', 'R2'])
+    expect(trappedNodes(sample, h({ closed_exits: ['E1', 'E2'] }))).toEqual(['C1', 'C2', 'C3', 'C4', 'R1', 'R2'])
   })
 })
 

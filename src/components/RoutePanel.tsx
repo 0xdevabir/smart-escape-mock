@@ -89,10 +89,10 @@ export function RoutePanel({ building, hazards, route, start, lang, t, onStart }
             </ol>
           </details>
           <details className="sub">
-            <summary>{t('route.alternatives')}</summary>
-            {route.alternatives.length ? (
+            <summary>{t('route.otherExits')}</summary>
+            {route.otherExits.length ? (
               <ul className="alts">
-                {route.alternatives.map((a) => (
+                {route.otherExits.map((a) => (
                   <li key={a.exit}>
                     <strong>{a.exit}</strong> · {t('route.cost')} {formatNum(a.cost, lang)}
                     <div className="muted">{a.path.join(' → ')}</div>
