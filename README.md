@@ -4,7 +4,7 @@
 
 # WayNest
 
-### Interactive evacuation route simulator — pick a start, toggle hazards, watch the lowest-cost exit path update instantly in English and বাংলা
+### Smart Escape topic · Interactive evacuation route simulator — pick a start, toggle hazards, watch the lowest-cost exit path update instantly in English and বাংলা
 
 ![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
@@ -13,9 +13,9 @@
 ![i18n](https://img.shields.io/badge/i18n-English%20%2B%20বাংলা-0EA5E9?style=for-the-badge)
 ![Frontend only](https://img.shields.io/badge/frontend%20only-no%20backend-success?style=for-the-badge)
 
-**AI DevFest Vibe Coding** · practice / mock test · frontend-only
+**AI DevFest Vibe Coding** · Smart Escape topic · practice / mock test · frontend-only
 
-[Live demo](https://smart-escape.devabir.me/) · [Repository](https://github.com/0xdevabir/smart-escape-mock) · [Quick start](#-run-it-in-3-commands) · [How it works](#-how-it-works) · [Sample checks](#-sample-checks--41) · [Feature tour](#%EF%B8%8F-feature-tour) · [Two-minute demo](#-two-minute-demo) · [What this is not](#%EF%B8%8F-what-this-is-not)
+[Live demo](https://waynest.devabir.me/) · [Repository](https://github.com/0xdevabir/waynest) · [Quick start](#-run-it-in-3-commands) · [How it works](#-how-it-works) · [Sample checks](#-sample-checks--41) · [Feature tour](#%EF%B8%8F-feature-tour) · [Two-minute demo](#-two-minute-demo) · [What this is not](#%EF%B8%8F-what-this-is-not)
 
 </div>
 
@@ -45,8 +45,8 @@
 |---|---|
 | **Name** | MD ABIR HOSSAIN |
 | **Registration number** | `261-15-001` |
-| **Live link (HTTPS)** | [smart-escape.devabir.me](https://smart-escape.devabir.me/) |
-| **Repository** | [github.com/0xdevabir/smart-escape-mock](https://github.com/0xdevabir/smart-escape-mock) |
+| **Live link (HTTPS)** | [waynest.devabir.me](https://waynest.devabir.me/) |
+| **Repository** | [github.com/0xdevabir/waynest](https://github.com/0xdevabir/waynest) |
 
 </div>
 
@@ -285,7 +285,7 @@ The build is fully static (`base: './'`). Host `dist/` on GitHub Pages, Netlify,
 
 - Dataset labels and IDs are shown exactly as written in the file; only the app's own text switches between English and Bangla.
 - The map is scaled to fit the file's coordinates. In very dense graphs, labels can overlap; zoom in (`+`) to read them.
-- The last dataset and hazards are restored from `localStorage`. Open the app with `?fresh` (for example `https://smart-escape.devabir.me/?fresh`) to start again from the sample file.
+- The last dataset and hazards are restored from `localStorage`. Open the app with `?fresh` (for example `https://waynest.devabir.me/?fresh`) to start again from the sample file.
 - The Bangla web font loads from Google Fonts. If that is blocked, the system Bangla font is used instead.
 - Judge mode only appears when the official sample graph is loaded, because its expected results only apply to that graph.
 
