@@ -1,0 +1,29 @@
+{
+  "building": "Sample Training Building",
+  "nodes": [
+    { "id": "R1", "label": "Room 1", "type": "room", "x": 100, "y": 100 },
+    { "id": "C1", "label": "Junction 1", "type": "junction", "x": 250, "y": 100 },
+    { "id": "C2", "label": "Junction 2", "type": "junction", "x": 400, "y": 100 },
+    { "id": "E1", "label": "Exit 1", "type": "exit", "x": 550, "y": 100 },
+    { "id": "R2", "label": "Room 2", "type": "room", "x": 100, "y": 250 },
+    { "id": "C3", "label": "Junction 3", "type": "junction", "x": 250, "y": 250 },
+    { "id": "C4", "label": "Junction 4", "type": "junction", "x": 400, "y": 250 },
+    { "id": "E2", "label": "Exit 2", "type": "exit", "x": 550, "y": 250 }
+  ],
+  "edges": [
+    { "id": "K1", "from": "R1", "to": "C1", "cost": 2 },
+    { "id": "K2", "from": "C1", "to": "C2", "cost": 3 },
+    { "id": "K3", "from": "C2", "to": "E1", "cost": 2 },
+    { "id": "K4", "from": "R1", "to": "R2", "cost": 5 },
+    { "id": "K5", "from": "C1", "to": "C3", "cost": 4 },
+    { "id": "K6", "from": "C2", "to": "C4", "cost": 3 },
+    { "id": "K7", "from": "R2", "to": "C3", "cost": 2 },
+    { "id": "K8", "from": "C3", "to": "C4", "cost": 3 },
+    { "id": "K9", "from": "C4", "to": "E2", "cost": 2 }
+  ],
+  "initial_state": {
+    "blocked_nodes": [],
+    "blocked_edges": [],
+    "closed_exits": []
+  }
+}
