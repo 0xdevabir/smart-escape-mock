@@ -43,7 +43,7 @@
 
 | | |
 |---|---|
-| **Name** | `<your full name>` |
+| **Name** | MD ABIR HOSSAIN |
 | **Registration number** | `261-15-001` |
 | **Live link (HTTPS)** | [smart-escape.devabir.me](https://smart-escape.devabir.me/) |
 | **Repository** | [github.com/0xdevabir/smart-escape-mock](https://github.com/0xdevabir/smart-escape-mock) |
