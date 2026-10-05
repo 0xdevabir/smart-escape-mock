@@ -1,4 +1,4 @@
-# Smart Escape: build plan (90-minute budget)
+# Smart Scrap: build plan (90-minute budget)
 
 ## 0. Constraints from the rulebook
 - Frontend only (no backend, serverless functions or remote DB). Browser storage is fine.
