@@ -2,7 +2,7 @@ export type Lang = 'en' | 'bn'
 type Dict = Record<string, string>
 
 const en: Dict = {
-  'app.title': 'Smart Scrap',
+  'app.title': 'Smart Escape',
   'app.subtitle': 'Interactive Evacuation Route Simulator',
   'app.disclaimer': 'Educational simulation only. Not a certified real-world evacuation planning tool.',
   'lang.switch': 'বাংলা',
@@ -201,7 +201,7 @@ const en: Dict = {
 }
 
 const bn: Dict = {
-  'app.title': 'স্মার্ট স্ক্র্যাপ',
+  'app.title': 'স্মার্ট এস্কেপ',
   'app.subtitle': 'ইন্টারঅ্যাকটিভ জরুরি নির্গমন পথ সিমুলেটর',
   'app.disclaimer': 'শুধুমাত্র শিক্ষামূলক সিমুলেশন। এটি প্রত্যয়িত বাস্তব জরুরি নির্গমন পরিকল্পনার টুল নয়।',
   'lang.switch': 'English',

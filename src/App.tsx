@@ -13,7 +13,7 @@ import type { BEdge, BNode, Building, Hazards } from './lib/types'
 import { FIT, zoomBy, type View } from './lib/view'
 import { parseBuildingText, validateBuilding, type ValidationError } from './lib/validate'
 
-const STORE_KEY = 'smart-scrap:v1'
+const STORE_KEY = 'smart-escape:v1'
 const SAMPLE_URL = `${import.meta.env.BASE_URL}building.json`
 const MAX_ERRORS = 12
 const MAX_HISTORY = 100
@@ -263,7 +263,7 @@ export default function App() {
 
   const exportPng = () => {
     if (svgRef.current && building) {
-      void exportSvgAsPng(svgRef.current, `smart-scrap-${building.building.replace(/[^\w-]+/g, '_')}.png`)
+      void exportSvgAsPng(svgRef.current, `smart-escape-${building.building.replace(/[^\w-]+/g, '_')}.png`)
     }
   }
 

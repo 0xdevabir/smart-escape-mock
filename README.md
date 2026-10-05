@@ -1,4 +1,4 @@
-# Smart Scrap
+# Smart Escape
 ### Interactive evacuation route simulator — pick a start, toggle hazards, watch the lowest-cost exit path update instantly in English and বাংলা
 
 ![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
@@ -14,7 +14,7 @@
 
 > **Why is this hard?** An evacuation map is only useful while the building keeps changing. A blocked corridor, a closed exit, a room that just became unsafe — the “best” path a second ago may be wrong now. Hard-coding paths fails the moment the hazard map moves.
 
-> **Smart Scrap answers one question, on every click:** *from this start, through the current hazards, what is the lowest-cost route to an open exit — and why that path, not another with the same cost?*
+> **Smart Escape answers one question, on every click:** *from this start, through the current hazards, what is the lowest-cost route to an open exit — and why that path, not another with the same cost?*
 
 | 8 nodes · 9 corridors East Annex sample | 5 / 5 §4.1 sample checks | 40 / 40 unit tests | EN + বাংলা full UI | 0 backend calls everything local |
 | --------------------------------------- | ------------------------ | ------------------ | ------------------ | -------------------------------- |
@@ -30,7 +30,7 @@
 
 ## 🎯 The problem and how we answer it
 
-| The problem | What Smart Scrap does | Where to see it |
+| The problem | What Smart Escape does | Where to see it |
 | --- | --- | --- |
 | Paths go stale the moment a hazard changes | Dijkstra recalculates **synchronously** after every toggle | Map highlight · Route panel |
 | Ties between equal-cost paths are ambiguous | Lexicographically smallest exit ID, then smallest node sequence | *Why this path?* · Tie screenshot |
@@ -66,7 +66,7 @@ flowchart LR
 sequenceDiagram
     autonumber
     actor U as User
-    participant UI as Smart Scrap UI
+    participant UI as Smart Escape UI
     participant E as Route engine
     U->>UI: Block corridor / close exit / pick start
     UI->>UI: Push hazard history (undo stack)
@@ -166,7 +166,7 @@ flowchart TB
 ```
 
 ```
-smart-scrap/
+smart-escape/
 ├── public/building.json     # East Annex sample
 ├── screenshots/             # feature tour images
 ├── src/
