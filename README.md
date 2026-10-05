@@ -39,12 +39,16 @@
 <img src="screenshots/01-baseline-R1.png" alt="Smart Escape map with R1 selected and the lowest-cost route to exit E1 highlighted" width="92%" />
 </div>
 
-<table>
-<tr><td align="right"><b>Name</b></td><td><code>&lt;your full name&gt;</code></td></tr>
-<tr><td align="right"><b>Registration number</b></td><td><code>261-15-001</code></td></tr>
-<tr><td align="right"><b>Live link (HTTPS)</b></td><td><a href="https://0xdevabir.github.io/smart-scape-mock/">https://0xdevabir.github.io/smart-scape-mock/</a></td></tr>
-<tr><td align="right"><b>Repository</b></td><td><a href="https://github.com/0xdevabir/smart-scape-mock">https://github.com/0xdevabir/smart-scape-mock</a></td></tr>
-</table>
+<div align="center">
+
+| | |
+|---|---|
+| **Name** | `<your full name>` |
+| **Registration number** | `261-15-001` |
+| **Live link (HTTPS)** | [0xdevabir.github.io/smart-scape-mock](https://0xdevabir.github.io/smart-scape-mock/) |
+| **Repository** | [github.com/0xdevabir/smart-scape-mock](https://github.com/0xdevabir/smart-scape-mock) |
+
+</div>
 
 ---
 
@@ -58,7 +62,7 @@
 | Judges need to verify §4.1 without a checklist | Built-in **Judge mode** runs the five sample checks through the real engine | Judge mode panel |
 | Bangla users get English-only tools | Every label, status, error and walkthrough is translated; Bangla digits in BN mode | Bangla screenshot |
 
-**Hero workflow:** open the app → East Annex loads → click **R1** → see `R1 → C1 → C2 → E1` (cost 7) → block **C2** → the route flips to `R1 → C1 → C3 → C4 → E2` (cost 11) with a `7 → 11 (+4)` badge and a faint ghost of the old path.
+**Hero workflow:** open the app → brand intro plays → East Annex loads → click **R1** → see `R1 → C1 → C2 → E1` (cost 7) → block **C2** → the route flips to `R1 → C1 → C3 → C4 → E2` (cost 11) with a `7 → 11 (+4)` badge and a faint ghost of the old path.
 
 ---
 
@@ -187,6 +191,7 @@ flowchart TB
       App --> HazardPanel
       App --> SelfCheck
       App --> HelpDialog
+      App --> SplashIntro
     end
     subgraph Engine["src/lib — pure functions"]
       validate["validate.ts · §3.1"]
