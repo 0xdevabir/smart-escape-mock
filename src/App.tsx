@@ -1,5 +1,5 @@
 import { BookOpen, ChevronRight, Database, Ellipsis, FlaskConical, LayoutDashboard, Moon, Network, Scale, Settings, ShieldAlert, Sun } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import { Toast } from './components/ui'
 import type { Key } from './i18n'
 import About from './pages/About'
@@ -31,12 +31,29 @@ const MORE = NAV.filter((n) => !n.tab)
 
 function Wordmark() {
   const { i18n } = useApp()
+  const uid = useId().replace(/:/g, '')
+  const ringId = `tlRing-${uid}`
+  const coreId = `tlCore-${uid}`
   return (
     <a href="#/overview" className="flex items-center gap-2.5 no-underline">
       <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden>
+        <defs>
+          <linearGradient id={ringId} x1="6" y1="5" x2="26" y2="27" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="var(--accent)" />
+            <stop offset="100%" stopColor="var(--accent-ink)" stopOpacity="0.85" />
+          </linearGradient>
+          <linearGradient id={coreId} x1="12" y1="11" x2="20" y2="21" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="var(--highlight)" />
+            <stop offset="100%" stopColor="var(--accent)" />
+          </linearGradient>
+        </defs>
         <rect width="32" height="32" rx="9" fill="var(--tile)" />
-        <circle cx="14" cy="14" r="7" fill="none" stroke="var(--accent)" strokeWidth="3" />
-        <path d="M19 19l6 6" stroke="var(--accent)" strokeWidth="3.2" strokeLinecap="round" />
+        <circle cx="16" cy="15" r="8.2" fill="none" stroke={`url(#${ringId})`} strokeWidth="1.7" />
+        <circle cx="16" cy="15" r="5" fill="none" stroke="var(--accent)" strokeWidth="1.15" opacity="0.9" />
+        <path d="M9.6 16.6a6.8 6.8 0 0 1 11-5" fill="none" stroke="var(--highlight)" strokeWidth="1.4" strokeLinecap="round" />
+        <circle cx="16" cy="15" r="2.1" fill={`url(#${coreId})`} />
+        <circle cx="16" cy="15" r="0.85" fill="var(--tile)" />
+        <path d="M13.2 23.2h5.6M16 21v3.2" stroke="var(--accent)" strokeWidth="1.35" strokeLinecap="round" opacity="0.75" />
       </svg>
       <span className="text-[1.12rem] font-bold tracking-tight text-ink">{i18n.t('appName')}</span>
     </a>
