@@ -32,7 +32,7 @@ export function evidenceFor(tx: Tx, s: Scored, ctx: FeatureContext, i: I18n) {
     transaction: { id: tx.id, time_bst: i.date(tx.ts), type: tx.type, amount_bdt: tx.amount, channel: tx.channel, location: tx.location, sender_wallet: tx.sender, receiver_wallet: tx.receiver },
     sender_baseline: { earlier_transactions: ctx.history, usual_amount_bdt: ctx.typicalAmount, wallet_age_days: ctx.ageDays },
     risk: { score_0_100: s.score, band: s.band, likely_pattern: s.typology, ml_probability: +s.mlProb.toFixed(3), anomaly_percentile: +s.anomaly.toFixed(3), rules_fired: s.rules.map((r) => r.id) },
-    signals: s.reasons.map((r) => reasonText(r, tx, ctx, { ...i, t: i.t, lang: 'en' } as I18n)),
+    signals: s.reasons.map((r) => reasonText(r, tx, ctx, i)),
   }
 }
 
