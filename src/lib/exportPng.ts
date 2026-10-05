@@ -17,10 +17,13 @@ export async function exportSvgAsPng(svg: SVGSVGElement, fileName: string, scale
     // The route "draw" animation uses a dash offset; export the finished line.
     if (el.classList.contains('route-line')) target.style.setProperty('stroke-dashoffset', '0')
   })
-  // Hidden hit areas and pulses are interaction-only.
-  clone.querySelectorAll('.edge-hit, .start-pulse').forEach((n) => n.remove())
+  // Hit areas, pulses, previews and the walkthrough marker are interaction-only.
+  clone.querySelectorAll('.edge-hit, .start-pulse, .preview-line, .ghost-line, .walker').forEach((n) => n.remove())
 
-  const vb = svg.viewBox.baseVal
+  // Always export the whole building, even when the on-screen map is zoomed in.
+  const [w, h] = (svg.dataset.full ?? '').split(' ').map(Number)
+  const vb = w && h ? { width: w, height: h } : svg.viewBox.baseVal
+  clone.setAttribute('viewBox', `0 0 ${vb.width} ${vb.height}`)
   clone.setAttribute('width', String(vb.width))
   clone.setAttribute('height', String(vb.height))
   const xml = new XMLSerializer().serializeToString(clone)

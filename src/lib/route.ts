@@ -163,6 +163,28 @@ export function trappedNodes(b: Building, h: Hazards): string[] {
   return b.nodes.filter((n) => n.type !== 'exit' && adj.has(n.id) && !reach.has(n.id)).map((n) => n.id).sort(cmp)
 }
 
+/** Connected parts of the usable building that contain a room or junction, each with its open exits. */
+export function regions(b: Building, h: Hazards): { nodes: string[]; exits: string[] }[] {
+  const adj = usableGraph(b, h)
+  const type = new Map(b.nodes.map((n) => [n.id, n.type]))
+  const seen = new Set<string>()
+  const out: { nodes: string[]; exits: string[] }[] = []
+  for (const id of [...adj.keys()].sort(cmp)) {
+    if (seen.has(id)) continue
+    const part: string[] = []
+    const stack = [id]
+    seen.add(id)
+    while (stack.length) {
+      const u = stack.pop()!
+      part.push(u)
+      for (const { to } of adj.get(u)!) if (!seen.has(to)) { seen.add(to); stack.push(to) }
+    }
+    const nodes = part.filter((x) => type.get(x) !== 'exit').sort(cmp)
+    if (nodes.length) out.push({ nodes, exits: part.filter((x) => type.get(x) === 'exit').sort(cmp) })
+  }
+  return out
+}
+
 const MAX_TIED_PATHS = 5
 
 /** Every minimum-cost path start→exit in lexicographic order (capped) plus the exact count. */

@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { computeRoute, rankedRoutes, trappedNodes } from './route'
+import { computeRoute, rankedRoutes, regions, trappedNodes } from './route'
+import { isSampleGraph, runScenario, SCENARIOS } from './selfCheck'
 import type { Building, Hazards } from './types'
 import { parseBuildingText, validateBuilding } from './validate'
 
@@ -104,7 +105,24 @@ describe('routing rules (3.3, 3.4)', () => {
   })
 })
 
+describe('judge-mode self-check', () => {
+  it('recognises the official sample and every scenario passes', () => {
+    expect(isSampleGraph(sample)).toBe(true)
+    for (const s of SCENARIOS) expect(runScenario(sample, s).pass).toBe(true)
+  })
+  it('is disabled for other graphs with the same IDs', () => {
+    const changed = { ...sample, edges: sample.edges.map((e) => (e.id === 'L01' ? { ...e, cost: 3 } : e)) }
+    expect(isSampleGraph(changed)).toBe(false)
+  })
+})
+
 describe('ranked routes and trapped nodes', () => {
+  it('regions report which parts still have an open exit', () => {
+    expect(regions(sample, h({ blocked_nodes: ['C1', 'C3'] }))).toEqual([
+      { nodes: ['C2', 'C4'], exits: ['E1', 'E2'] },
+      { nodes: ['R1', 'R2'], exits: [] },
+    ])
+  })
   it('top 3 routes from R1 ordered by cost then sequence', () => {
     expect(rankedRoutes(sample, base, 'R1')).toEqual([
       { exit: 'E1', cost: 7, path: ['R1', 'C1', 'C2', 'E1'] },

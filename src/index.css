@@ -159,7 +159,7 @@ button, select, input { font: inherit; color: inherit; }
 .segmented button.on { background: var(--card); color: var(--primary); box-shadow: 0 1px 3px rgb(0 0 0 / 12%); }
 :root[data-contrast='high'] .segmented button.on { outline: 2px solid var(--ink); }
 
-.map-wrap { border-radius: 12px; overflow: hidden; border: 1px solid var(--line); }
+.map-wrap { position: relative; display: flex; flex-direction: column; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); background: var(--map-bg); }
 .disclaimer { margin: 12px 0 0; font-size: 12px; color: var(--muted); }
 
 /* ---------- Legend */
@@ -175,6 +175,8 @@ button, select, input { font: inherit; color: inherit; }
 .lg-closed { fill: var(--closed); }
 .lg-x { stroke: #fff; stroke-width: 2.2; stroke-linecap: round; }
 .lg-bedge { stroke: var(--danger); stroke-width: 3; stroke-dasharray: 4 3; }
+.lg-ghost { stroke: var(--primary); stroke-width: 5; stroke-linecap: round; opacity: .25; }
+.lg-trapped { fill: none; stroke: var(--warn); stroke-width: 2.5; stroke-dasharray: 3 2; }
 
 /* ---------- Map */
 .map { display: block; width: 100%; height: auto; max-height: 70vh; user-select: none; font-family: var(--font); }
@@ -268,6 +270,7 @@ button, select, input { font: inherit; color: inherit; }
 }
 .seq li:not(:last-child)::after { content: '→'; margin-left: 8px; margin-right: -4px; color: var(--muted); font-weight: 400; }
 .seq li:first-child { background: var(--primary); color: var(--primary-ink); }
+.seq li:first-child::after { color: var(--primary-ink); opacity: .8; }
 .seq li:last-child { background: var(--exit); border-color: var(--exit); color: #fff; }
 .seq-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
@@ -315,6 +318,105 @@ button, select, input { font: inherit; color: inherit; }
 .toast-region { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 30; pointer-events: none; }
 .toast { background: var(--ink); color: var(--card); padding: 10px 16px; border-radius: 10px; font-size: 14px; box-shadow: var(--shadow); animation: fade-in .2s ease-out; max-width: min(90vw, 520px); }
 
+/* ---------- Map extras: ghost / preview routes, walkthrough, dead ends, hazard pulse */
+.map.is-zoomed { cursor: grab; }
+.map.is-zoomed:active { cursor: grabbing; }
+.ghost-line {
+  fill: none; stroke: var(--primary); stroke-width: calc(var(--route-w) - 2); stroke-linecap: round; stroke-linejoin: round;
+  opacity: .22; pointer-events: none; animation: fade-in .3s ease-out;
+}
+.preview-line {
+  fill: none; stroke: var(--warn); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 10 7; pointer-events: none; opacity: .9;
+}
+.edge.is-step .edge-line { stroke: var(--warn); stroke-width: 9; }
+.walker { pointer-events: none; transition: transform .5s ease-in-out; }
+.walker circle { fill: var(--warn); stroke: #fff; stroke-width: 3; }
+.trap-ring { fill: none; stroke: var(--warn); stroke-width: 2.5; stroke-dasharray: 4 3; pointer-events: none; }
+.node.is-trapped .node-label { fill: var(--warn); font-weight: 600; }
+/* A soft one-off pulse whenever something becomes blocked or closed (runs when the class is added). */
+.node.is-blocked .node-body, .node.is-closed .node-body { animation: hazard-pop .45s ease-out; }
+.edge.is-blocked .edge-line { animation: hazard-flash .6s ease-out; }
+@keyframes hazard-pop { 0% { transform: scale(1); } 40% { transform: scale(1.22); } 100% { transform: scale(1); } }
+@keyframes hazard-flash { 0% { stroke-width: 12; opacity: .4; } 100% { stroke-width: 4; opacity: 1; } }
+
+.hud, .coach {
+  order: -1; align-self: flex-start; margin: 10px 10px 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px;
+  padding: 7px 12px; border-radius: 10px; font-size: 14px; box-shadow: var(--shadow); animation: fade-in .25s ease-out;
+  background: var(--card); border: 1px solid var(--line); max-width: calc(100% - 20px);
+}
+.hud-ok { border-color: var(--primary); }
+.hud-ok strong { color: var(--primary); }
+.hud-cost strong { font-size: 17px; }
+.hud-no-route, .hud-start-blocked { border-color: var(--danger); color: var(--danger); }
+.coach {
+  position: relative; align-self: center; margin-bottom: 4px; background: var(--primary); color: var(--primary-ink); border-color: var(--primary);
+  font-weight: 600; white-space: nowrap; animation: coach 2.4s ease-in-out infinite;
+}
+.coach::after {
+  content: ''; position: absolute; left: 50%; bottom: -6px; width: 12px; height: 12px; background: var(--primary);
+  transform: translateX(-50%) rotate(45deg);
+}
+@keyframes coach { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+.badge-change { font-size: 12px; font-weight: 700; border-radius: 999px; padding: 2px 8px; white-space: nowrap; animation: fade-in .3s ease-out; }
+.badge-change.up, .badge-change.lost { background: var(--danger-soft); color: var(--danger); border: 1px solid var(--danger); }
+.badge-change.down { background: var(--exit-soft); color: var(--exit); border: 1px solid var(--exit); }
+.zoom { position: absolute; right: 10px; bottom: 10px; display: flex; gap: 4px; }
+.btn.icon { min-width: 34px; padding: 6px 8px; font-size: 18px; line-height: 1; justify-content: center; }
+.tip {
+  position: absolute; z-index: 5; pointer-events: none; transform: translate(-50%, calc(-100% - 14px));
+  background: var(--ink); color: var(--card); padding: 7px 10px; border-radius: 8px; font-size: 12.5px; line-height: 1.45;
+  box-shadow: var(--shadow); white-space: nowrap;
+}
+.tip-head { font-weight: 700; }
+
+/* ---------- Route panel extras */
+.breakdown { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin-top: 10px; font-size: 13px; }
+.breakdown .chip { display: inline-block; min-width: 24px; text-align: center; padding: 1px 7px; border-radius: 6px; background: var(--card); border: 1px solid var(--line); font-weight: 700; }
+.breakdown .chip.total { background: var(--primary); color: var(--primary-ink); border-color: var(--primary); }
+.breakdown .op { color: var(--muted); margin: 0 2px; }
+.play { margin-top: 10px; }
+.seq li.is-now { outline: 3px solid var(--warn); outline-offset: 1px; }
+.steps li.is-now { color: var(--warn); font-weight: 600; }
+.why p { font-size: 14px; margin: 8px 0 0; }
+.tied { margin: 6px 0 0; padding-left: 22px; font-size: 13.5px; }
+.tied li { padding: 3px 0; }
+.tied li.chosen { font-weight: 700; color: var(--primary); }
+.alts li[tabindex], .tied li[tabindex] { cursor: default; border-radius: 6px; }
+.alts li[tabindex]:hover, .alts li[tabindex]:focus-visible, .tied li[tabindex]:hover, .tied li[tabindex]:focus-visible { background: var(--soft); outline: none; }
+.pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 1px 8px; border-radius: 999px; background: var(--exit-soft); color: var(--exit); border: 1px solid var(--exit); }
+.escape { margin-top: 8px; font-size: 14px; }
+.escape ul { margin: 4px 0 0; padding-left: 20px; }
+.trapped-note { margin: 10px 0 0; font-size: 13.5px; color: var(--warn); font-weight: 600; }
+
+/* ---------- Judge mode */
+.check-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.check-head .badge.ok { color: var(--exit); background: var(--exit-soft); }
+.check-card > p { font-size: 13px; margin: 4px 0 8px; }
+.checks { list-style: none; padding: 0; margin: 0 0 12px; }
+.checks li { display: grid; grid-template-columns: auto 1fr auto auto; gap: 8px; align-items: center; padding: 7px 4px; border-bottom: 1px dashed var(--line); font-size: 14px; border-radius: 6px; transition: background-color .2s; }
+.checks li.is-now { background: var(--primary-soft); }
+.checks .muted { font-size: 12.5px; }
+.tick { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; font-weight: 800; font-size: 13px; color: #fff; }
+.tick.ok { background: var(--exit); }
+.tick.bad { background: var(--danger); }
+.check-name { font-weight: 600; }
+
+/* ---------- Help dialog */
+.help-dialog { border: 1px solid var(--line); border-radius: var(--radius); padding: 0; max-width: min(720px, calc(100vw - 32px)); width: 100%; background: var(--card); color: var(--ink); box-shadow: var(--shadow); }
+.help-dialog::backdrop { background: rgb(10 15 30 / 45%); }
+.help-dialog[open] { animation: fade-in .2s ease-out; }
+.help-body { padding: 20px 22px; max-height: min(80vh, 760px); overflow: auto; }
+.help-body header { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.help-body h3 { font-size: 15px; margin: 18px 0 8px; }
+.help-body ol, .help-body ul { margin: 0; padding-left: 20px; font-size: 14px; }
+.help-body li { margin: 4px 0; }
+.keys { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 6px 16px; margin: 0; font-size: 14px; }
+.keys div { display: flex; gap: 10px; align-items: baseline; }
+.keys dt { flex: none; min-width: 110px; }
+.keys dd { margin: 0; }
+kbd { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; padding: 2px 6px; border-radius: 6px; border: 1px solid var(--line); border-bottom-width: 2px; background: var(--soft); white-space: nowrap; }
+
 /* ---------- Responsive */
 @media (max-width: 980px) {
   .layout { grid-template-columns: 1fr; padding: 16px; }
@@ -325,6 +427,25 @@ button, select, input { font: inherit; color: inherit; }
 @media (max-width: 560px) {
   .toolbar .divider { display: none; }
   .btn { padding: 7px 10px; font-size: 13px; }
+}
+
+@media (max-width: 560px) {
+  .hud { font-size: 13px; }
+  .zoom { display: none; }
+  .coach { font-size: 13px; white-space: normal; text-align: center; }
+}
+
+/* ---------- Print: map, route and legend only, on white */
+@media print {
+  :root { --bg: #fff; --card: #fff; --map-bg: #fff; --shadow: none; }
+  body { background: #fff; }
+  .toolbar, .zoom, .tip, .coach, .toast-region, .segmented, .help, .play, .hazard-card, .check-card, .error-box,
+  .field .btn, .drop-overlay { display: none !important; }
+  .layout { display: block; padding: 0; }
+  .side { position: static; max-height: none; overflow: visible; }
+  .card { box-shadow: none; break-inside: avoid; border: 1px solid #999; margin-bottom: 12px; }
+  .map { max-height: none; }
+  .hud { position: static; box-shadow: none; margin: 8px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
