@@ -71,7 +71,7 @@ export default function Overview() {
                     <b className="text-ink">{i18n.num(r.n)}</b> · {i18n.money(r.amt)}
                   </span>
                 </div>
-                <div className="h-2 rounded-full bg-surface-2">
+                <div className="h-2 rounded-full bg-surface-3">
                   <div className="h-full rounded-full" style={{ width: `${(r.n / maxN) * 100}%`, background: TYP_COLOR[r.typ] }} />
                 </div>
               </li>
@@ -84,15 +84,15 @@ export default function Overview() {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={daily} margin={{ top: 4, right: 4, left: -18, bottom: 0 }}>
                 <CartesianGrid vertical={false} stroke="var(--grid)" />
-                <XAxis dataKey="label" tick={{ fontSize: 11, fill: 'var(--muted)' }} tickLine={false} axisLine={{ stroke: 'var(--line-strong)' }} interval="preserveStartEnd" minTickGap={24} />
+                <XAxis dataKey="label" tick={{ fontSize: 11, fill: 'var(--muted)' }} tickLine={false} axisLine={false} interval="preserveStartEnd" minTickGap={24} />
                 <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: 'var(--muted)' }} tickLine={false} axisLine={false} tickFormatter={(v) => i18n.num(v)} />
                 <Tooltip
                   cursor={{ fill: 'var(--surface-2)' }}
-                  contentStyle={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8, fontSize: 13 }}
+                  contentStyle={{ background: 'var(--glass-strong)', backdropFilter: 'blur(20px)', border: 0, borderRadius: 12, boxShadow: 'var(--shadow-float)', fontSize: 13 }}
                   labelStyle={{ color: 'var(--ink)', fontWeight: 600 }}
                   formatter={(v) => [i18n.num(Number(v)), t('ov.kpi.alerts')]}
                 />
-                <Bar dataKey="n" fill="var(--c-ato)" radius={[4, 4, 0, 0]} maxBarSize={18} />
+                <Bar dataKey="n" fill="var(--c-ato)" radius={[6, 6, 6, 6]} maxBarSize={14} />
               </BarChart>
             </ResponsiveContainer>
           </div>

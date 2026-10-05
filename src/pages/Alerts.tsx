@@ -74,7 +74,7 @@ export default function Alerts() {
       </div>
 
       <Panel pad={false}>
-        <div className="flex items-center justify-between border-b border-line px-5 py-3 text-[0.88rem] text-ink-2">
+        <div className="flex items-center justify-between px-5 pt-3.5 pb-1 text-[0.85rem] font-medium text-muted">
           <span className="num">{t('al.count', { n: rows.length })}</span>
         </div>
         <div className="overflow-x-auto">
@@ -110,8 +110,8 @@ export default function Alerts() {
           </table>
         </div>
         {rows.length > limit && (
-          <div className="border-t border-line p-3 text-center">
-            <button className="btn" onClick={() => setLimit((l) => l + PAGE)}>{t('al.more', { n: Math.min(PAGE, rows.length - limit) })}</button>
+          <div className="hairline-t p-3 text-center">
+            <button className="btn btn-tinted" onClick={() => setLimit((l) => l + PAGE)}>{t('al.more', { n: Math.min(PAGE, rows.length - limit) })}</button>
           </div>
         )}
       </Panel>

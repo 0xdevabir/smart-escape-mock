@@ -84,7 +84,7 @@ export default function RiskRibbon({ points, start, end, threshold }: { points: 
         </svg>
         {hover && (
           <div
-            className="pointer-events-none absolute z-10 w-56 rounded-lg border border-line bg-surface px-3 py-2 text-[0.82rem] shadow-lg"
+            className="glass-strong pointer-events-none absolute z-10 w-56 rounded-xl px-3 py-2 text-[0.82rem] shadow-[var(--shadow-float)]"
             style={{ left: Math.min(Math.max(0, x(hover.tx.ts) - 112), w - 224), top: Math.max(0, y(hover.s.score) - 92) }}
           >
             <div className="flex justify-between font-semibold">

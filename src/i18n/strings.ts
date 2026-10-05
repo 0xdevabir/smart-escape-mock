@@ -17,6 +17,11 @@ export const en = {
   'nav.data': 'Data',
   'nav.settings': 'Settings',
   'nav.about': 'How it works',
+  'nav.more': 'More',
+  'tab.overview': 'Overview',
+  'tab.alerts': 'Alerts',
+  'tab.network': 'Networks',
+  'tab.simulator': 'Score',
 
   // overview
   'ov.title': 'Risk overview',
@@ -346,6 +351,11 @@ export const bn: Record<Key, string> = {
   'nav.data': 'ডেটা',
   'nav.settings': 'সেটিংস',
   'nav.about': 'যেভাবে কাজ করে',
+  'nav.more': 'আরও',
+  'tab.overview': 'সারসংক্ষেপ',
+  'tab.alerts': 'সতর্কতা',
+  'tab.network': 'নেটওয়ার্ক',
+  'tab.simulator': 'যাচাই',
 
   'ov.title': 'ঝুঁকির সারসংক্ষেপ',
   'ov.lede': '{src} থেকে {d} দিনের {n}টি লেনদেন। কোনো অ্যাকাউন্টে ব্যবস্থা নেওয়ার আগে প্রতিটি সতর্কতায় বিশ্লেষকের সিদ্ধান্ত লাগবে।',
