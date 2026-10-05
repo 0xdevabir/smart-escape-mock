@@ -222,6 +222,8 @@ button { touch-action: manipulation; }
 .btn.lang { min-width: 84px; background: var(--accent-soft); color: var(--accent-ink); }
 .btn.small { padding: 6px 13px; min-height: 32px; font-size: 13px; }
 .btn.icon { min-width: 38px; width: 38px; padding: 0; font-size: 17px; line-height: 1; }
+.btn.toggle-btn { color: var(--muted); }
+.btn.toggle-btn[aria-pressed='true'] { background: var(--cta); color: var(--cta-ink); }
 
 /* ---------- Layout */
 .layout {
@@ -294,7 +296,7 @@ button { touch-action: manipulation; }
 .lg-room { fill: var(--node-room); stroke: var(--node-stroke); stroke-width: 2; }
 .lg-junction { fill: var(--node-junction); stroke: var(--node-stroke); stroke-width: 2; }
 .lg-exit { fill: var(--exit); }
-.lg-start { fill: var(--primary); }
+.lg-start { fill: var(--cta); stroke: var(--primary); stroke-width: 2.5; }
 .lg-route { stroke: var(--primary); stroke-width: 5; stroke-linecap: round; }
 .lg-blocked { fill: var(--danger); }
 .lg-closed { fill: var(--closed); }
@@ -373,9 +375,11 @@ button { touch-action: manipulation; }
 .node:focus-visible .shape { stroke: var(--primary); stroke-width: 4; }
 
 .node.is-route .shape { stroke: var(--primary); stroke-width: 4; }
-.node.is-route.type-room .shape, .node.is-route.type-junction .shape { fill: var(--primary-soft); }
-.node.is-start .shape, .node.is-route.is-start .shape { fill: var(--primary); stroke: var(--primary); }
-.node.is-start .node-id { fill: var(--primary-ink); }
+/* Opaque tint (primary-soft is translucent in dark mode, which let the route line show through the ID) */
+.node.is-route.type-room .shape, .node.is-route.type-junction .shape { fill: color-mix(in srgb, var(--primary) 20%, var(--map-bg)); }
+/* Start is ink-filled with a route-coloured ring, so it reads differently from the route itself */
+.node.is-start .shape, .node.is-route.is-start .shape { fill: var(--cta); stroke: var(--primary); stroke-width: 4; }
+.node.is-start .node-id { fill: var(--cta-ink); }
 .node.is-blocked .shape { fill: var(--danger); stroke: var(--danger); }
 .node.is-blocked .node-id, .node.is-closed .node-id { fill: #fff; }
 .node.is-closed .shape { fill: var(--closed); stroke: var(--closed); stroke-dasharray: 5 3; }
@@ -389,11 +393,13 @@ button { touch-action: manipulation; }
 .walker { pointer-events: none; transition: transform .6s var(--ease); }
 .walker circle { fill: var(--warn); stroke: #fff; stroke-width: 3; filter: drop-shadow(0 4px 8px rgb(0 0 0 / 30%)); }
 
-/* ---------- Floating map overlays: HUD, coach mark, zoom, tooltip */
+/* ---------- Map overlays: HUD / coach mark and zoom share a bar above the drawing, so they never cover a node */
+.map-wrap { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+.map-wrap > .map { grid-column: 1 / -1; grid-row: 2; }
 .hud, .coach {
-  order: -1; align-self: flex-start; margin: 12px 12px 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px;
+  grid-row: 1; grid-column: 1; justify-self: start; margin: 12px 0 0 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px;
   padding: 8px 14px; border-radius: 999px; font-size: 14px; box-shadow: var(--shadow); animation: pop-in .5s var(--spring) both;
-  background: var(--glass); border: 1px solid var(--glass-line); max-width: calc(100% - 150px);
+  background: var(--glass); border: 1px solid var(--glass-line); max-width: calc(100% - 12px);
   backdrop-filter: blur(18px) saturate(1.7); -webkit-backdrop-filter: blur(18px) saturate(1.7);
 }
 .hud-ok strong { color: var(--primary); }
@@ -401,7 +407,7 @@ button { touch-action: manipulation; }
 .hud-cost strong { font-size: 18px; letter-spacing: -.02em; }
 .hud-no-route, .hud-start-blocked { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 35%, transparent); }
 .coach {
-  position: relative; align-self: center; margin-bottom: 4px; background: var(--cta); color: var(--cta-ink); border-color: transparent;
+  position: relative; justify-self: center; margin-bottom: 4px; background: var(--cta); color: var(--cta-ink); border-color: transparent;
   font-weight: 600; white-space: nowrap; animation: pop-in .5s var(--spring) both, coach 2.6s var(--ease) .5s infinite;
 }
 .coach::after {
@@ -409,17 +415,18 @@ button { touch-action: manipulation; }
   border-radius: 2px; transform: translateX(-50%) rotate(45deg);
 }
 .zoom {
-  position: absolute; z-index: 2; right: 12px; top: 12px; display: flex; gap: 2px; padding: 3px; border-radius: 999px;
+  grid-row: 1; grid-column: 2; align-self: start; margin: 12px 12px 0 8px; display: flex; gap: 2px; padding: 3px; border-radius: 999px;
   background: var(--glass); border: 1px solid var(--glass-line); box-shadow: var(--shadow);
   backdrop-filter: blur(18px) saturate(1.7); -webkit-backdrop-filter: blur(18px) saturate(1.7);
 }
 .zoom .btn.icon { background: transparent; min-height: 34px; width: 34px; min-width: 34px; }
 @media (hover: hover) { .zoom .btn.icon:hover:not(:disabled) { background: var(--fill); } }
 .tip {
-  position: absolute; z-index: 5; pointer-events: none; transform: translate(-50%, calc(-100% - 14px));
-  background: color-mix(in srgb, #1b1b1b 88%, transparent); color: #f5f5dc; padding: 8px 12px; border-radius: 12px;
-  font-size: 12.5px; line-height: 1.45; box-shadow: var(--shadow-lg); white-space: nowrap;
-  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); animation: tip-in .25s var(--ease) both;
+  /* Solid inverted card (ink on light, cream on dark) so it never blends into the map; MapView clamps left/top. */
+  position: absolute; z-index: 30; left: 0; top: 0; pointer-events: none; max-width: min(300px, calc(100% - 16px));
+  background: var(--cta); color: var(--cta-ink); padding: 9px 13px; border-radius: 12px;
+  font-size: 12.5px; line-height: 1.45; box-shadow: var(--shadow-lg); white-space: normal; overflow-wrap: anywhere;
+  animation: tip-in .2s var(--ease) both;
 }
 .tip-head { font-weight: 700; }
 
@@ -479,8 +486,8 @@ button { touch-action: manipulation; }
   padding: 3px 10px; border-radius: 999px; animation: chip-in .45s var(--spring) both;
 }
 .seq li:not(:last-child)::after { content: '→'; margin-left: 8px; margin-right: -4px; color: var(--muted); font-weight: 400; }
-.seq li:first-child { background: var(--primary); color: var(--primary-ink); }
-.seq li:first-child::after { color: var(--primary-ink); opacity: .8; }
+.seq li:first-child { background: var(--cta); color: var(--cta-ink); }
+.seq li:first-child::after { color: var(--cta-ink); opacity: .8; }
 .seq li:last-child { background: var(--exit); border-color: var(--exit); color: var(--exit-ink); }
 .seq li.is-now { outline: 3px solid var(--warn); outline-offset: 2px; }
 .seq-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -641,7 +648,7 @@ kbd { font-family: var(--mono); font-size: 12px; padding: 3px 7px; border-radius
 @keyframes pop-in { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: none; } }
 @keyframes chip-in { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: none; } }
 @keyframes toast-in { from { opacity: 0; transform: translateY(24px) scale(.9); } to { opacity: 1; transform: none; } }
-@keyframes tip-in { from { opacity: 0; transform: translate(-50%, calc(-100% - 6px)) scale(.96); } to { opacity: 1; transform: translate(-50%, calc(-100% - 14px)); } }
+@keyframes tip-in { from { opacity: 0; transform: translateY(4px) scale(.97); } to { opacity: 1; transform: none; } }
 @keyframes sheet-pop { from { opacity: 0; transform: translateY(24px) scale(.96); } to { opacity: 1; transform: none; } }
 @keyframes sheet-up { from { transform: translateY(100%); } to { transform: none; } }
 @keyframes backdrop-in { from { opacity: 0; } to { opacity: 1; } }
@@ -707,7 +714,6 @@ kbd { font-family: var(--mono); font-size: 12px; padding: 3px 7px; border-radius
   .hud { font-size: 13px; margin: 8px 8px 0; padding: 6px 12px; }
   .zoom { right: 8px; top: 8px; }
   .zoom .btn.icon { width: 32px; min-width: 32px; min-height: 32px; }
-  .hud, .coach { max-width: calc(100% - 130px); }
   .coach { font-size: 13px; white-space: normal; text-align: center; border-radius: 16px; }
   .legend { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
   .legend::-webkit-scrollbar { display: none; }

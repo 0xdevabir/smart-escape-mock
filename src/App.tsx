@@ -4,6 +4,7 @@ import { MapView } from './components/MapView'
 import { ChangeBadge, RoutePanel, type Change } from './components/RoutePanel'
 import { HazardPanel } from './components/HazardPanel'
 import { HelpDialog } from './components/HelpDialog'
+import { Icon } from './components/Icon'
 import { SelfCheck } from './components/SelfCheck'
 import { SplashIntro } from './components/SplashIntro'
 import { exportSvgAsPng } from './lib/exportPng'
@@ -397,14 +398,14 @@ export default function App() {
           <button className="btn primary" onClick={() => fileRef.current?.click()}>{t('btn.import')}</button>
           <button className="btn" onClick={loadSample}>{t('btn.sample')}</button>
           <button className="btn" onClick={reset} disabled={!building} title={t('btn.resetTitle')}>{t('btn.reset')}</button>
-          <button className="btn icon" onClick={undo} disabled={!past.length} aria-label={t('btn.undo')} title={`${t('btn.undo')} (Ctrl/⌘ Z)`}>↶</button>
-          <button className="btn icon" onClick={redo} disabled={!future.length} aria-label={t('btn.redo')} title={`${t('btn.redo')} (Ctrl/⌘ ⇧ Z)`}>↷</button>
-          <button className="btn" onClick={exportPng} disabled={!building}>{t('btn.png')}</button>
+          <button className="btn icon" onClick={undo} disabled={!past.length} aria-label={t('btn.undo')} title={`${t('btn.undo')} (Ctrl/⌘ Z)`}><Icon name="undo" /></button>
+          <button className="btn icon" onClick={redo} disabled={!future.length} aria-label={t('btn.redo')} title={`${t('btn.redo')} (Ctrl/⌘ ⇧ Z)`}><Icon name="redo" /></button>
+          <button className="btn" onClick={exportPng} disabled={!building}><Icon name="image" size={16} />{t('btn.png')}</button>
           <span className="divider" aria-hidden="true" />
-          <button className="btn ghost" onClick={() => setContrast((c) => !c)} aria-pressed={contrast}>
-            {t(contrast ? 'contrast.on' : 'contrast.off')}
+          <button className="btn toggle-btn" onClick={() => setContrast((c) => !c)} aria-pressed={contrast}>
+            <Icon name="contrast" size={16} />{t(contrast ? 'contrast.on' : 'contrast.off')}
           </button>
-          <button className="btn icon" onClick={() => setHelp(true)} aria-label={t('help.title')} title={`${t('help.title')} (?)`}>?</button>
+          <button className="btn icon" onClick={() => setHelp(true)} aria-label={t('help.title')} title={`${t('help.title')} (?)`}><Icon name="help" /></button>
           <button
             className="btn lang"
             onClick={() => setLang((l) => (l === 'en' ? 'bn' : 'en'))}

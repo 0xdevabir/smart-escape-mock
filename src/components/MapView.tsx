@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
+import { forwardRef, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import type { FocusEvent, KeyboardEvent, PointerEvent, ReactNode } from 'react'
 import type { BEdge, BNode, Building, Hazards, Step } from '../lib/types'
 import { formatNum, type Lang } from '../lib/i18n'
@@ -58,6 +58,20 @@ export const MapView = forwardRef<SVGSVGElement, Props>(function MapView(
   const wrapRef = useRef<HTMLDivElement>(null)
   const drag = useRef<{ x: number; y: number; view: View; moved: boolean } | null>(null)
   const [tip, setTip] = useState<Tip | null>(null)
+  const tipRef = useRef<HTMLDivElement>(null)
+
+  // Keep the tooltip fully inside the map frame: clamp horizontally, and flip below the pointer near the top edge.
+  useLayoutEffect(() => {
+    const el = tipRef.current, wrap = wrapRef.current
+    if (!tip || !el || !wrap) return
+    const m = 8, gap = 14
+    const w = el.offsetWidth, h = el.offsetHeight
+    const left = Math.max(m, Math.min(tip.x - w / 2, wrap.clientWidth - w - m))
+    const above = tip.y - h - gap
+    const top = above >= m ? above : Math.max(m, Math.min(tip.y + gap + 6, wrap.clientHeight - h - m))
+    el.style.left = `${left}px`
+    el.style.top = `${top}px`
+  }, [tip])
 
   const blockedNodes = new Set(hazards.blocked_nodes)
   const closedExits = new Set(hazards.closed_exits)
@@ -301,14 +315,14 @@ export const MapView = forwardRef<SVGSVGElement, Props>(function MapView(
 
       {children}
 
-      <div className="zoom" role="group" aria-label={t('zoom.label')}>
+      <div className="zoom" role="group" aria-label={t('zoom.label')} onPointerEnter={() => setTip(null)}>
         <button className="btn icon" onClick={() => onView(zoomBy(view, 1.4))} disabled={view.k >= MAX_ZOOM} aria-label={t('zoom.in')} title={t('zoom.in')}>+</button>
         <button className="btn icon" onClick={() => onView(zoomBy(view, 1 / 1.4))} disabled={view.k <= 1} aria-label={t('zoom.out')} title={t('zoom.out')}>−</button>
         <button className="btn icon" onClick={() => onView(FIT)} disabled={view.k === 1} aria-label={t('zoom.fit')} title={t('zoom.fit')}>⤢</button>
       </div>
 
       {tip && (
-        <div className="tip" role="tooltip" style={{ left: tip.x, top: tip.y }}>
+        <div ref={tipRef} className="tip" role="tooltip">
           {tip.lines.map((l, i) => <div key={i} className={i === 0 ? 'tip-head' : undefined}>{l}</div>)}
         </div>
       )}
