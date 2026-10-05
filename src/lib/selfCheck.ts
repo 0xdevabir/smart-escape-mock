@@ -1,7 +1,11 @@
 import { computeRoute } from './route'
 import type { Building, Hazards } from './types'
 
-/** The five sample checks from §4.1 of the problem statement, written as data. */
+/**
+ * The five sample checks from §4.1 of the problem statement, written as data.
+ * Only the judge-mode panel reads these expected results, to compare them with computeRoute().
+ * The routing engine never uses them: every route on screen is computed from the loaded file.
+ */
 export interface Scenario {
   id: string
   start: string

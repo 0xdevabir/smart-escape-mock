@@ -211,7 +211,7 @@ The build is fully static (`base: './'`). Host `dist/` on GitHub Pages, Netlify,
 4. **Reset** restores the file’s `initial_state`. **বাংলা / English** switches language. **↶ / ↷** undo and redo.
 5. Press **?** for shortcuts, routing rules and the validation catalog.
 
-**Keyboard:** `R` reset · `E` language · `S`/`H` mode · arrows move start · `P` play · `Ctrl/⌘ Z` / `⇧Z` undo/redo · `+` `−` `0` zoom · `?` help.
+**Keyboard:** `R` reset · `E` language · `S`/`H` mode · arrows move start (map focused) · `P` play · `Ctrl/⌘ Z` / `⇧Z` undo/redo · `+` `−` `0` zoom · `?` help.
 
 ---
 

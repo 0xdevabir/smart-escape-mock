@@ -146,7 +146,7 @@ export default function App() {
 
   useEffect(() => {
     if (!toast) return
-    const id = setTimeout(() => setToast(null), 4000)
+    const id = setTimeout(() => setToast(null), toast.key === 'msg.restored' ? 8000 : 4000)
     return () => clearTimeout(id)
   }, [toast])
 
@@ -343,7 +343,8 @@ export default function App() {
       if (e.key === '+' || e.key === '=') return setView((v) => zoomBy(v, 1.4))
       if (e.key === '-') return setView((v) => zoomBy(v, 1 / 1.4))
       if (e.key === '0') return setView(FIT)
-      if (e.key.startsWith('Arrow')) {
+      // Arrow keys only steer the start while the map has focus, so they never hijack page scrolling.
+      if (e.key.startsWith('Arrow') && e.target instanceof Element && e.target.closest('.map-card')) {
         e.preventDefault()
         moveStart(e.key)
       }
