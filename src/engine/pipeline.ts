@@ -85,7 +85,7 @@ function transferModel() {
   const y = ds.txs.map((t) => t.label ?? 0)
   const scaler = new Scaler().fit(X)
   const model = new LogisticModel().fit(X.map((x) => scaler.transform(x)), y)
-  transferCache = { scaler, model, pos: y.reduce((a, b) => a + b, 0), n: X.length }
+  transferCache = { scaler, model, pos: y.reduce<number>((a, b) => a + b, 0), n: X.length }
   return transferCache
 }
 
@@ -241,7 +241,7 @@ export const regionOf = (district: string) => (URBAN.has(district) ? 'urban' : '
 export function evaluate(ds: Dataset, res: EngineResult, threshold: number): Evaluation | null {
   const idx = ds.txs.map((t, i) => (t.ts >= res.artifacts.testStart && res.labels[i] !== undefined ? i : -1)).filter((i) => i >= 0)
   const y = idx.map((i) => res.labels[i]!)
-  const pos = y.reduce((a, b) => a + b, 0)
+  const pos = y.reduce<number>((a, b) => a + b, 0)
   if (!idx.length || !pos || pos === y.length) return null
   const s = idx.map((i) => res.scored[i].score)
   const amounts = idx.map((i) => ds.txs[i].amount)

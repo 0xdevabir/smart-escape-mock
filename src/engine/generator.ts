@@ -1,4 +1,4 @@
-import { logNormal, mulberry32, normal, pick, poisson, shuffle, type Rng } from './rng'
+import { logNormal, mulberry32, normal, pick, poisson, shuffle } from './rng'
 import { bstTime, DAY, HOUR } from './time'
 import type { Account, Channel, Dataset, Pattern, Segment, Tx, TxType } from './types'
 
@@ -19,8 +19,10 @@ export interface GenOptions {
 
 export const DEFAULT_GEN: GenOptions = { seed: 2026, customers: 500, days: 45, fraudIntensity: 1 }
 
-const SEG_MEDIAN: Record<Segment, number> = { student: 700, salaried: 2800, rural: 1300, business: 5500 }
-const SEG_RATE: Record<Segment, number> = { student: 0.7, salaried: 0.9, rural: 0.45, business: 1.4 }
+// The generator never creates 'unknown' wallets; that segment only appears in imported files.
+type GenSegment = Exclude<Segment, 'unknown'>
+const SEG_MEDIAN: Record<GenSegment, number> = { student: 700, salaried: 2800, rural: 1300, business: 5500 }
+const SEG_RATE: Record<GenSegment, number> = { student: 0.7, salaried: 0.9, rural: 0.45, business: 1.4 }
 
 interface Profile {
   acc: Account
@@ -57,7 +59,7 @@ export function generateDataset(opts: GenOptions = DEFAULT_GEN): Dataset {
     accounts.push(m)
   }
 
-  const segments: Segment[] = ['student', 'salaried', 'rural', 'business']
+  const segments: GenSegment[] = ['student', 'salaried', 'rural', 'business']
   const profiles: Profile[] = []
   for (let i = 0; i < opts.customers; i++) {
     const segment = pick(r, segments)
@@ -81,7 +83,7 @@ export function generateDataset(opts: GenOptions = DEFAULT_GEN): Dataset {
 
   // ---- normal behaviour -------------------------------------------------
   for (const p of profiles) {
-    const seg = p.acc.segment
+    const seg = p.acc.segment as GenSegment
     const median = SEG_MEDIAN[seg]
     const switchDay = r() < 0.03 ? Math.floor(r() * opts.days) : -1 // legit phone change
     const bigDay = r() < 0.02 ? Math.floor(r() * opts.days) : -1 // legit large family transfer
@@ -124,7 +126,7 @@ export function generateDataset(opts: GenOptions = DEFAULT_GEN): Dataset {
     const drops = 2 + Math.floor(r() * 3)
     for (let k = 0; k < drops; k++) {
       const mule = freshAccount(d, loc)
-      push({ ts: t0 + k * (3 + r() * 8) * 60_000, sender: v.acc.id, receiver: mule.id, type: 'send_money', amount: logNormal(r, SEG_MEDIAN[v.acc.segment] * 5, 0.35), channel: 'app', device: dev, location: loc, label: 1, pattern: 'ato' })
+      push({ ts: t0 + k * (3 + r() * 8) * 60_000, sender: v.acc.id, receiver: mule.id, type: 'send_money', amount: logNormal(r, SEG_MEDIAN[v.acc.segment as GenSegment] * 5, 0.35), channel: 'app', device: dev, location: loc, label: 1, pattern: 'ato' })
     }
   }
 
@@ -157,7 +159,7 @@ export function generateDataset(opts: GenOptions = DEFAULT_GEN): Dataset {
     const v = pick(r, profiles)
     const d = Math.floor(r() * opts.days)
     const scammer = freshAccount(d, pick(r, DISTRICTS))
-    push({ ts: bstTime(start, d, hourFor(v)), sender: v.acc.id, receiver: scammer.id, type: 'send_money', amount: logNormal(r, SEG_MEDIAN[v.acc.segment] * 5.5, 0.4), channel: 'app', device: v.device, location: v.acc.district, label: 1, pattern: 'scam' })
+    push({ ts: bstTime(start, d, hourFor(v)), sender: v.acc.id, receiver: scammer.id, type: 'send_money', amount: logNormal(r, SEG_MEDIAN[v.acc.segment as GenSegment] * 5.5, 0.4), channel: 'app', device: v.device, location: v.acc.district, label: 1, pattern: 'scam' })
   }
 
   // ---- colluding agent: night-time near-limit cash-outs from fresh wallets

@@ -149,6 +149,8 @@ html[lang='bn'] body {
   background: var(--accent-wash);
 }
 
+/* Component classes sit in the components layer so Tailwind utilities (pl-9, min-h-*, px-*) can override them. */
+@layer components {
 /* iOS large title + section header. */
 .h-page {
   font-family: var(--font-display);
@@ -407,6 +409,7 @@ input[type='checkbox']:checked::after {
 [data-theme='dark'] .seg > button[aria-pressed='true'] {
   background: #5a5a5e;
 }
+}  /* end @layer components */
 
 @keyframes ribbon-in {
   from {
